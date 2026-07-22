@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nti_graduation_project/core/theme/theme_app.dart';
 
 void main() {
   runApp(const ShoppingApp());
@@ -10,6 +11,8 @@ class ShoppingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeApp.lightTheme,
+      themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {},
