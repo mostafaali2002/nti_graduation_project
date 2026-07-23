@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nti_graduation_project/shopping_home_screen.dart';
 
 void main() {
   runApp(const ShoppingApp());
@@ -11,8 +12,9 @@ class ShoppingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {},
+      home: ShoppingHomeScreen(),
+      /*initialRoute: '/',
+      routes: {},*/
     );
   }
 }
