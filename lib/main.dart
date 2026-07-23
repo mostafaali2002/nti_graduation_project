@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/shopping_home_screen.dart';
 
 void main() {
@@ -11,6 +12,8 @@ class ShoppingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeApp.lightTheme,
+      themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: ShoppingHomeScreen(),
       /*initialRoute: '/',
