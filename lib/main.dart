@@ -12,7 +12,7 @@ class ShoppingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeApp.lightTheme,
-      themeMode: .light,
+      themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {},
