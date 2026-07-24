@@ -1,10 +1,10 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
-import 'package:nti_graduation_project/core/constant/app_assets.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
+import 'package:nti_graduation_project/features/onboarding/model/onbording_data.dart';
+import 'package:nti_graduation_project/features/onboarding/widget/custom_animated_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -30,7 +30,6 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
     bool isFirstPage = currentIndex == 0;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColorStyle.scaffoldBackgroundColor,
         elevation: 0,
         leading: isFirstPage
             ? null
@@ -58,7 +57,6 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
             ),
         ],
       ),
-      backgroundColor: AppColorStyle.scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -98,7 +96,6 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
                 dotHeight: 10,
                 dotWidth: 10,
                 spacing: 4,
-                //!====================================
                 dotColor: AppColorStyle.bottomNavigationBarBackgroundColor,
                 activeDotColor: AppColorStyle.secondaryButtonColor,
               ),
@@ -150,63 +147,6 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class OnbordingData {
-  final String image;
-  final String title;
-  final String description;
-  final String bottomText;
-
-  OnbordingData({
-    required this.image,
-    required this.title,
-    required this.description,
-    required this.bottomText,
-  });
-}
-
-List<OnbordingData> dataOnbording() {
-  return [
-    OnbordingData(
-      image: AppAssets.onboardingTwoImagePng,
-      title: 'Discover Trends',
-      description: 'Now we are here to provide variety of the best fashion',
-      bottomText: 'Next',
-    ),
-    OnbordingData(
-      image: AppAssets.onboardingOneImagePng,
-      title: 'Latest out fit',
-      description: 'Express your self through the art of the fashionism',
-      bottomText: 'Get started',
-    ),
-  ];
-}
-
-class CustomAnimatedWidget extends StatelessWidget {
-  const CustomAnimatedWidget({
-    super.key,
-    required this.index,
-    required this.delay,
-    required this.child,
-  });
-
-  final int index;
-  final int delay;
-  final Widget child;
-  @override
-  Widget build(BuildContext context) {
-    if (index == 0) {
-      return FadeInDown(
-        delay: Duration(milliseconds: delay),
-        child: child,
-      );
-    }
-    return FadeInUp(
-      delay: Duration(milliseconds: delay),
-      child: child,
     );
   }
 }
