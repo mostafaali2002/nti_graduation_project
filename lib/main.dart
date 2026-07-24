@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
+import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 
 import 'features/app_section/view/screens/bottom_navigator-ui.dart';
 
@@ -16,11 +17,11 @@ class ShoppingApp extends StatelessWidget {
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute:  AppRoutes.homeRoute,
+      initialRoute:  AppRoutes.helloRoute,
       routes: {
-        AppRoutes.homeRoute:(context)=>const BottomNavUI(),
+        AppRoutes.helloRoute:(context)=>const HelloScreen(),
       },
-
+     
     );
   }
 }
