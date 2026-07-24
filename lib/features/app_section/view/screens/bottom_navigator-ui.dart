@@ -11,29 +11,28 @@ import '../widgets/nav_icon.dart';
 
 class BottomNavUI extends StatelessWidget {
   const BottomNavUI({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AppSectionCubit(),
-      child: BlocBuilder<AppSectionCubit, AppSectionStates>(
+      child: BlocBuilder<AppSectionCubit, AppSectionState>(
         builder: (context, state) {
-          AppSectionCubit homeCubit = AppSectionCubit.get(context);
+          final cubit = context.read<AppSectionCubit>();
           return Scaffold(
             body: IndexedStack(
-              index: homeCubit.currentIndex,
+              index: cubit.currentIndex,
               children: [Home(), Cart(), Favourite(), Account()],
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: .fixed,
-              currentIndex: homeCubit.currentIndex,
-              onTap: (value) => homeCubit.move(value),
+              currentIndex: cubit.currentIndex,
+              onTap: (value) => context.read<AppSectionCubit>().changeTab(value),
               items: [
                 BottomNavigationBarItem(
                   icon: NavIcon(
                     path: AppAssets.homeIconSvg,
                     index: 0,
-                    homeCubit: homeCubit,
+                    currentIndex: cubit.currentIndex,
                   ),
                   label: "Home",
                 ),
@@ -41,7 +40,7 @@ class BottomNavUI extends StatelessWidget {
                   icon: NavIcon(
                     path: AppAssets.cartIconSvg,
                     index: 1,
-                    homeCubit: homeCubit,
+                    currentIndex: cubit.currentIndex,
                   ),
                   label: "Cart",
                 ),
@@ -50,7 +49,7 @@ class BottomNavUI extends StatelessWidget {
                   icon: NavIcon(
                     path: AppAssets.favIconSvg,
                     index: 2,
-                    homeCubit: homeCubit,
+                    currentIndex: cubit.currentIndex,
                   ),
                   label: "Favourite",
                 ),
@@ -59,7 +58,7 @@ class BottomNavUI extends StatelessWidget {
                   icon: NavIcon(
                     path: AppAssets.accountIconSvg,
                     index: 3,
-                    homeCubit: homeCubit,
+                    currentIndex: cubit.currentIndex,
                   ),
                   label: "Account",
                 ),

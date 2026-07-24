@@ -1,3 +1,5 @@
-sealed class AppSectionStates {}
-class Initial extends AppSectionStates{}
-class ChangeBottomNavState  extends AppSectionStates{}
+sealed class AppSectionState {}
+
+final class AppSectionInitial extends AppSectionState {}
+
+final class AppSectionChangeTabState extends AppSectionState {}

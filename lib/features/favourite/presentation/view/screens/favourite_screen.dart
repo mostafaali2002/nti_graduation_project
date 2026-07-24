@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/routes/app_routes.dart';
+
 class Favourite extends StatelessWidget {
   const Favourite({super.key});
-
+  static const routeName = AppRoutes.favRoute;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
