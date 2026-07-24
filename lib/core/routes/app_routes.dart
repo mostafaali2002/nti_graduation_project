@@ -3,4 +3,8 @@ abstract class AppRoutes {
   static const String cartRoute = '/cart';
   static const String favRoute = '/fav';
   static const String accountRoute = '/account';
+  static const String loginRoute = '/login';
+  static const String signupRoute = '/signup';
+  static const String helloRoute = '/hello';
+  static const String onBoarding = '/onBoarding';
 }
