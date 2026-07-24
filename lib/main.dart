@@ -3,6 +3,8 @@ import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 
+import 'features/app_section/view/screens/bottom_navigator-ui.dart';
+
 void main() {
   runApp(const ShoppingApp());
 }
