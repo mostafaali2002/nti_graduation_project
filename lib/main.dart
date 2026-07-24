@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nti_graduation_project/core/di/service_locator.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
+void main() {
+  configureDependencies();
+  runApp(const ShoppingApp());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
