@@ -26,12 +26,17 @@ class Home extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 11),
       child: CustomScrollView(
         slivers: [
-          const SliverToBoxAdapter(child: SafeArea(child: SizedBox())),
+          const SliverToBoxAdapter(
+            child: SafeArea(child: SizedBox()),
+          ),
 
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Text("Hi!", style: AppTextStyle.kTextStyleSemiBold16),
+              child: Text(
+                "Hi!",
+                style: AppTextStyle.kTextStyleSemiBold16,
+              ),
             ),
           ),
 
@@ -52,21 +57,31 @@ class Home extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
-                  return CategoryCart(title: categories[index]);
+                  return CategoryCart(
+                    title: categories[index],
+                  );
                 },
               ),
             ),
           ),
 
-          SliverToBoxAdapter(child: SizedBox(height: 20)),
+           SliverToBoxAdapter(
+            child: SizedBox(height: 20),
+          ),
 
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 20),
             sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return ItemCard(image: clothes[index % clothes.length]);
-              }, childCount: 10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  return ItemCard(
+                    image: clothes[index % clothes.length],
+                  );
+                },
+                childCount: 10,
+              ),
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 35,
                 mainAxisSpacing: 16.75,

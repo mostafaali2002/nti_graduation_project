@@ -33,7 +33,7 @@ class _ItemCardState extends State<ItemCard> {
                           });
                         },
                         icon: isFavourite
-                            ? Icon(Icons.favorite, color: Colors.black)
+                            ? Icon(Icons.favorite, color: Colors.red)
                             : Icon(Icons.favorite_border),
                       ),
                     ],
