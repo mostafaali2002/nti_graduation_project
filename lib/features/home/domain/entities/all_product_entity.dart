@@ -12,7 +12,6 @@ class ProductListEntity {
   double price;
   double discountPercentage;
   double rating;
-  List<String> tags;
   String availabilityStatus;
   List<String> images;
 
@@ -24,7 +23,6 @@ class ProductListEntity {
     this.price = 0.0,
     this.discountPercentage = 0.0,
     this.rating = 0.0,
-    this.tags = const [],
     this.availabilityStatus = '',
     this.images = const [],
   });
