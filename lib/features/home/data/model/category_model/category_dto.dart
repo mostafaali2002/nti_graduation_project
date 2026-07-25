@@ -16,11 +16,13 @@ class CategoryDto {
 class CategoryList {
   String? name;
   String? image;
+  String? slug;
 
   CategoryList({this.name, this.image});
 
   CategoryList.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     image = json['image'];
+    slug = json['slug'];
   }
 }

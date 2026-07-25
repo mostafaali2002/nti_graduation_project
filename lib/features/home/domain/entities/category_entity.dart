@@ -7,6 +7,7 @@ class CategoryEntity {
 class CategoryListEntity {
   String name;
   String image;
+  String slug;
 
-  CategoryListEntity({this.name = '', this.image = ''});
+  CategoryListEntity({this.name = '', this.image = '', this.slug = ''});
 }
