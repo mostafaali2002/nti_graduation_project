@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../utils/helper/app_color_style.dart';
 
 class ItemCard extends StatefulWidget {
-  ItemCard({super.key, required this.image});
-  String image;
+  const ItemCard({super.key, required this.image});
+  final String image;
 
   @override
   State<ItemCard> createState() => _ItemCardState();
