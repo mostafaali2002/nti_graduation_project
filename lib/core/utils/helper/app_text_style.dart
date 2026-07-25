@@ -21,6 +21,14 @@ abstract class AppTextStyle {
     fontWeight: FontWeight.w600,
     color: Colors.black,
   );
+  static const TextStyle kTextStyleDiscount = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    color: Color(0xFFFFB700),
+    decoration: TextDecoration.lineThrough,
+    decorationThickness: 1,
+    decorationColor: Color(0xFFFFB700),
+  );
 
   static const TextStyle kTextStyleSemiBold18 = TextStyle(
     fontSize: 18,

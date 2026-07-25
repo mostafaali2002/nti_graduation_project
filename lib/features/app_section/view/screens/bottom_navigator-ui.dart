@@ -26,7 +26,7 @@ class BottomNavUI extends StatelessWidget {
             bottomNavigationBar: BottomNavigationBar(
               type: .fixed,
               currentIndex: cubit.currentIndex,
-              onTap: (value) => context.read<AppSectionCubit>().changeTab(value),
+              onTap: (value) => cubit.changeTab(value),
               items: [
                 BottomNavigationBarItem(
                   icon: NavIcon(
