@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 
 class CategoryCart extends StatelessWidget {
-  String title;
-  CategoryCart({super.key, required this.title});
+  final String title;
+  const CategoryCart({super.key, required this.title});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -14,7 +14,9 @@ class CategoryCart extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(),
         ),
-        child: Center(child: Text(title,style: AppTextStyle.kTextStyleRegular14,),),
+        child: Center(
+          child: Text(title, style: AppTextStyle.kTextStyleRegular14),
+        ),
       ),
     );
   }

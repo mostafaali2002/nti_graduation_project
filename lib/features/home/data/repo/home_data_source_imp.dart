@@ -9,28 +9,35 @@ import 'package:nti_graduation_project/features/home/domain/repo/home_data_sourc
 class HomeDataSourceImp implements HomeDataSourceInterface {
   @override
   Future<ResultApi<CategoryEntity>> getCategories() {
-    // TODO: implement getCategories
     throw UnimplementedError();
   }
 
   @override
-  Future<ResultApi<AllProductEntity>> getAllProducts({String? token}) async {
+  Future<ResultApi<AllProductEntity>> getAllProducts({
+    String? token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjNjN2I3ZmY4Yzk4YjE2NzcyOTk2YSIsImlhdCI6MTc4NDkyNDEzOSwiZXhwIjoxNzg3NTE2MTM5fQ.KU7CP8RSbNjzEttsOTBdXP1LyCin3iYjo8-EKZe0jZw",
+  }) async {
     try {
-      final Dio _dio = Dio();
-      var response = await _dio.get(
-        '${ApiConstant.baseUrl}${ApiConstant.allProductEndPoint}',
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: ApiConstant.baseUrl,
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        ),
+      );
+
+      final response = await dio.get(
+        ApiConstant.allProductEndPoint,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      switch (response) {
-        case Success<AllProductEntity>():
-          var result = AllProductDto.fromJson(response.data).toEntity();
-          return Success<AllProductEntity>(result);
-        case Error<AllProductEntity>():
-          return Error<AllProductEntity>("no internet connection");
-      }
-      return Error<AllProductEntity>("no internet connection");
+      final result = AllProductDto.fromJson(response.data).toEntity();
+      return Success(result);
     } on DioException catch (e) {
-      throw Exception(e.message);
+      return Error(
+        e.response?.data["message"] ?? e.message ?? "Something went wrong",
+      );
+    } catch (e) {
+      return Error(e.toString());
     }
   }
 }
