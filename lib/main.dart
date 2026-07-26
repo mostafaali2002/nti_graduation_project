@@ -21,20 +21,20 @@ void main() async {
 }
 
 class ShoppingApp extends StatelessWidget {
-  const ShoppingApp({super.key});
+  const ShoppingApp({super.key, required this.initialRoute});
+  final String initialRoute;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute:  AppRoutes.helloRoute,
+      initialRoute: AppRoutes.onBoarding,
       routes: {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
         AppRoutes.homeRoute: (_) => const BottomNavUI(),
       },
-
     );
   }
 }

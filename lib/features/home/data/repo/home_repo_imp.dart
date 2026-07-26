@@ -5,11 +5,11 @@ import 'package:nti_graduation_project/features/home/domain/repo/home_data_sourc
 import 'package:nti_graduation_project/features/home/domain/repo/home_repo_interface.dart';
 
 class HomeRepoImp implements HomeRepoInterface {
-  HomeDataSourceInterface _homeDataSourceInterface;
+  final HomeDataSourceInterface _homeDataSourceInterface;
   HomeRepoImp(this._homeDataSourceInterface);
   @override
-  Future<ResultApi<AllProductEntity>> getAllProducts({String? token}) =>
-      _homeDataSourceInterface.getAllProducts(token: "");
+  Future<ResultApi<AllProductEntity>> getAllProducts() =>
+      _homeDataSourceInterface.getAllProducts();
 
   @override
   Future<ResultApi<CategoryEntity>> getCategories() {
