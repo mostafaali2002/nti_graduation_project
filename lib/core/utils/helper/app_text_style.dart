@@ -61,6 +61,11 @@ abstract class AppTextStyle {
     fontWeight: FontWeight.w400,
     color: Colors.black,
   );
+  static const TextStyle kTextStyleBold14 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
   static const TextStyle kTextStyleMedium14 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
