@@ -44,6 +44,7 @@ class Home extends StatelessWidget {
                      style: AppTextStyle.kTextStyleSemiBold16,
                    ),
                  ),
+
                  SizedBox(height: 10),
                  SizedBox(
                    height: 40,
