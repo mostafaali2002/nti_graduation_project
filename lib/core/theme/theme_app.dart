@@ -31,6 +31,7 @@ abstract class ThemeApp {
   );
 
   static const TextTheme lightTextTheme = TextTheme(
+    displaySmall: AppTextStyle.kTextStyleBold14,
     displayLarge: AppTextStyle.kTextStyleMedium48,
     headlineLarge: AppTextStyle.kTextStyleSemiBold24,
     headlineMedium: AppTextStyle.kTextStyleBold22,
