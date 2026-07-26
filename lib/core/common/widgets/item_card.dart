@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import '../../utils/helper/app_color_style.dart';
 
 class ItemCard extends StatefulWidget {
@@ -43,8 +44,20 @@ class _ItemCardState extends State<ItemCard> {
               ),
             ),
           ),
-          Text("T-shirt oversize"),
-          Text("EGP 199"),
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text("T-shirt oversize",style: AppTextStyle.kTextStyleRegular14),
+              Text("⭐4.5",style: AppTextStyle.kTextStyleRegular14,),
+            ],
+          ),
+          Row(
+            children: [
+              Text("EGP 199",style: AppTextStyle.kTextStyleRegular14,),
+              SizedBox(width: 5,),
+              Text("EGP 255",style: AppTextStyle.kTextStyleDiscount,)
+            ],
+          ),
         ],
       ),
     );
