@@ -1,7 +1,7 @@
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 
 class AllProductDto {
-  List<ProductList>? productList;
+  List<ProductListDto>? productList;
 
   AllProductDto({this.productList});
 
@@ -9,7 +9,7 @@ class AllProductDto {
     if (json['list'] != null) {
       productList = [];
       json['list'].forEach((v) {
-        productList!.add(ProductList.fromJson(v));
+        productList!.add(ProductListDto.fromJson(v));
       });
     }
   }
@@ -20,7 +20,7 @@ class AllProductDto {
   }
 }
 
-class ProductList {
+class ProductListDto {
   int? id;
   String? title;
   String? description;
@@ -32,7 +32,7 @@ class ProductList {
   String? availabilityStatus;
   List<String>? images;
 
-  ProductList({
+  ProductListDto({
     this.id,
     this.title,
     this.description,
@@ -45,7 +45,7 @@ class ProductList {
     this.images,
   });
 
-  ProductList.fromJson(Map<String, dynamic> json) {
+  ProductListDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];

@@ -4,5 +4,5 @@ import 'package:nti_graduation_project/features/home/domain/entities/category_en
 
 abstract interface class HomeDataSourceInterface {
   Future<ResultApi<CategoryEntity>> getCategories();
-  Future<ResultApi<AllProductEntity>> getAllProducts({String? token});
+  Future<ResultApi<AllProductEntity>> getAllProducts();
 }
