@@ -14,6 +14,7 @@ class ProductListEntity {
   double rating;
   String availabilityStatus;
   List<String> images;
+  String thumbnail;
 
   ProductListEntity({
     this.id = 0,
@@ -25,5 +26,6 @@ class ProductListEntity {
     this.rating = 0.0,
     this.availabilityStatus = '',
     this.images = const [],
+    this.thumbnail = "",
   });
 }
