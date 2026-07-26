@@ -51,6 +51,7 @@ class _ItemCardState extends State<ItemCard> {
               Text("⭐4.5",style: AppTextStyle.kTextStyleRegular14,),
             ],
           ),
+
           Row(
             children: [
               Text("EGP 199",style: AppTextStyle.kTextStyleRegular14,),
