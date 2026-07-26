@@ -22,75 +22,67 @@ class Home extends StatelessWidget {
       'assets/images/black_t_shirt.png',
       'assets/images/orange_t_shirt.png',
     ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 11),
-      child: CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(
-            child: SafeArea(child: SizedBox()),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Text(
-                "Hi!",
-                style: AppTextStyle.kTextStyleSemiBold16,
-              ),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-              child: Text(
-                "Let's start your day",
-                style: AppTextStyle.kTextStyleSemiBold16,
-              ),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return CategoryCart(
-                    title: categories[index],
-                  );
-                },
-              ),
-            ),
-          ),
-
-           SliverToBoxAdapter(
-            child: SizedBox(height: 20),
-          ),
-
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 20),
-            sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return ItemCard(
-                    image: clothes[index % clothes.length],
-                  );
-                },
-                childCount: 10,
-              ),
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 35,
-                mainAxisSpacing: 16.75,
-                childAspectRatio: 0.69,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+     return Scaffold(
+       body: SafeArea(
+         child: SingleChildScrollView(
+           child: Padding(
+             padding: EdgeInsets.symmetric(horizontal: 11),
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: 5),
+                   child: Text(
+                     "Hi!",
+                     style: AppTextStyle.kTextStyleSemiBold16,
+                   ),
+                 ),
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: 5),
+                   child: Text(
+                     "Let's start your day",
+                     style: AppTextStyle.kTextStyleSemiBold16,
+                   ),
+                 ),
+                 SizedBox(height: 10),
+                 SizedBox(
+                   height: 40,
+                   child: Padding(
+                     padding: EdgeInsets.symmetric(horizontal: 5),
+                     child: ListView.builder(
+                       scrollDirection: Axis.horizontal,
+                       itemCount: categories.length,
+                       itemBuilder: (context, index) {
+                         return CategoryCart(
+                           title: categories[index],
+                         );
+                       },
+                     ),
+                   ),
+                 ),
+                 SizedBox(height: 20),
+                 GridView.builder(
+                   itemCount: 10,
+                   shrinkWrap: true,
+                   physics: NeverScrollableScrollPhysics(),
+                   gridDelegate:
+                   SliverGridDelegateWithFixedCrossAxisCount(
+                     crossAxisCount: 2,
+                     crossAxisSpacing: 35,
+                     mainAxisSpacing: 16.75,
+                     childAspectRatio: 0.69,
+                   ),
+                   itemBuilder: (context, index) {
+                     return ItemCard(
+                       image: clothes[index % clothes.length],
+                     );
+                   },
+                 ),
+               ],
+             ),
+           ),
+         ),
+       ),
+     );
   }
 }
