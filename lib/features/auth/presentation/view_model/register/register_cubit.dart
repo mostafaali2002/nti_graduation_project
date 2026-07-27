@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/features/auth/domain/entities/register_request_entity.dart';
 import 'package:nti_graduation_project/features/auth/domain/use_case/register_use_case.dart';
 
 part 'register_state.dart';
 
+@injectable
 class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit(this._registerUseCase) : super(RegisterInitial());
   final RegisterUseCase _registerUseCase;
