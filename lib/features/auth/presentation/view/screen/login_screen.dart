@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_text_field.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
-import 'package:nti_graduation_project/core/utils/app_dialog.dart';
-import 'package:nti_graduation_project/core/utils/app_toast.dart';
+import 'package:nti_graduation_project/core/utils/widgets/app_dialog.dart';
+import 'package:nti_graduation_project/core/utils/widgets/app_toast.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
-import 'package:nti_graduation_project/core/utils/validator_app.dart';
+import 'package:nti_graduation_project/core/utils/helper/validator_app.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart';
 import 'package:toastification/toastification.dart';
 
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: Validator.validatePassword,
                   hintText: "Enter your password",
                   isPassword: true,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.visiblePassword,
                   action: TextInputAction.next,
                 ),
                 SizedBox(height: 30),
@@ -94,13 +94,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   textColor: AppColorStyle.bottomNavigationBarBackgroundColor,
                   borderColor: AppColorStyle.primaryButtonColor,
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {}
-                    context.read<LoginCubit>().intent(
-                      LoginIntintLogin(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      ),
-                    );
+                    if (formKey.currentState!.validate()) {
+                      context.read<LoginCubit>().intent(
+                        LoginIntintLogin(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        ),
+                      );
+                    }
                   },
                 ),
               ],

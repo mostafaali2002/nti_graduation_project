@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:nti_graduation_project/core/constant/app_keys.dart';
 import 'package:nti_graduation_project/core/network/result_api.dart';
-import 'package:nti_graduation_project/core/storge_helper/secure_storage_helper.dart';
+import 'package:nti_graduation_project/core/storage_helper/secure_storage_helper.dart';
 import 'package:nti_graduation_project/features/auth/domain/entities/login_response_entity.dart';
 import 'package:nti_graduation_project/features/auth/domain/entities/register_request_entity.dart';
 import 'package:nti_graduation_project/features/auth/domain/repo/auth_data_source_interface.dart';
@@ -9,8 +9,9 @@ import 'package:nti_graduation_project/features/auth/domain/repo/auth_repo_inter
 
 @Injectable(as: AuthRepoInterface)
 class AuthRepoImplem implements AuthRepoInterface {
-  AuthRepoImplem(this._dataSource);
+  AuthRepoImplem(this._dataSource, this._secureStorageHelper);
   final AuthDataSourceInterface _dataSource;
+  final SecureStorageHelper _secureStorageHelper;
 
   @override
   Future<ResultApi<String>> register(RegisterRequestEntity requst) async =>
@@ -25,7 +26,7 @@ class AuthRepoImplem implements AuthRepoInterface {
     switch (result) {
       case Success<LoginResponseEntity>():
         var entity = result.data;
-        await SecureStorageHelper.instance.saveSecure(
+        await _secureStorageHelper.saveSecure(
           key: AppKeys.token,
           value: entity.token,
         );

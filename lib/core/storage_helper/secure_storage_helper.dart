@@ -1,13 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class SecureStorageHelper {
-  SecureStorageHelper._();
-  static SecureStorageHelper? _instance;
-
-  static SecureStorageHelper get instance {
-    _instance ??= SecureStorageHelper._();
-    return _instance!;
-  }
+  SecureStorageHelper();
 
   static AndroidOptions _getAndroidOptions() => const AndroidOptions();
 
