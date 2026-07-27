@@ -96,7 +96,7 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
                 dotHeight: 10,
                 dotWidth: 10,
                 spacing: 4,
-                dotColor: AppColorStyle.unselectedBottomNavigationBarColor,
+                dotColor: AppColorStyle.unselectedSmoothPageIndicatorColor,
                 activeDotColor: AppColorStyle.secondaryButtonColor,
               ),
             ),
