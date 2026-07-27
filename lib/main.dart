@@ -29,7 +29,7 @@ class ShoppingApp extends StatelessWidget {
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.onBoarding,
+      initialRoute: AppRoutes.homeRoute,
       routes: {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
