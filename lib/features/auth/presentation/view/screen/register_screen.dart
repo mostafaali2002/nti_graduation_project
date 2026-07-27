@@ -51,11 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AppDialogs.showLoadingDialog(context);
                 return;
               }
-              if (state is RegisterErorr || state is RegisterSuccess) {
-                if (Navigator.of(context, rootNavigator: true).canPop()) {
-                  Navigator.of(context, rootNavigator: true).pop();
-                }
-              }
+              Navigator.of(context, rootNavigator: true).pop();
               if (state is RegisterErorr) {
                 AppToast.showToast(
                   context: context,
@@ -71,9 +67,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   description: 'Account created successfully',
                   type: ToastificationType.success,
                 );
-                Navigator.of(
-                  context,
-                ).pushReplacementNamed(AppRoutes.loginRoute);
+
+                Navigator.of(context).pop();
               }
             },
             child: Column(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:nti_graduation_project/core/constant/api_constants.dart';
@@ -45,7 +47,7 @@ class AuthDataSourceImplem implements AuthDataSourceInterface {
       DioHelper.init();
       final loginResponse = await DioHelper.dio.post(
         ApiConstant.login,
-        data: {"email": email, "password": password},
+        data: jsonEncode({"email": email, "password": password}),
       );
       final loginResponseDto = LoginResponseDto.fromJson(loginResponse.data);
       return Success(loginResponseDto.toEntity());

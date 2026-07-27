@@ -19,8 +19,12 @@ import 'package:nti_graduation_project/features/auth/domain/repo/auth_data_sourc
     as _i331;
 import 'package:nti_graduation_project/features/auth/domain/repo/auth_repo_interface.dart'
     as _i48;
+import 'package:nti_graduation_project/features/auth/domain/use_case/login_use_case.dart'
+    as _i9;
 import 'package:nti_graduation_project/features/auth/domain/use_case/register_use_case.dart'
     as _i103;
+import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart'
+    as _i137;
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart'
     as _i788;
 
@@ -37,11 +41,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i48.AuthRepoInterface>(
       () => _i694.AuthRepoImplem(gh<_i331.AuthDataSourceInterface>()),
     );
+    gh.factory<_i9.LoginUseCase>(
+      () => _i9.LoginUseCase(gh<_i48.AuthRepoInterface>()),
+    );
     gh.factory<_i103.RegisterUseCase>(
       () => _i103.RegisterUseCase(gh<_i48.AuthRepoInterface>()),
     );
     gh.factory<_i788.RegisterCubit>(
       () => _i788.RegisterCubit(gh<_i103.RegisterUseCase>()),
+    );
+    gh.factory<_i137.LoginCubit>(
+      () => _i137.LoginCubit(gh<_i9.LoginUseCase>()),
     );
     return this;
   }
