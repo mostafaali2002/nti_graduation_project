@@ -19,7 +19,9 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   Future<void> _register(RegisterRequestEntity requst) async {
+    emit(RegisterLoding());
     final result = await _registerUseCase.invoke(requst);
+    if (isClosed) return;
     switch (result) {
       case Success<String>():
         emit(RegisterSuccess());

@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_text_field.dart';
+import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/utils/app_dialog.dart';
 import 'package:nti_graduation_project/core/utils/app_toast.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
@@ -30,6 +32,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: Text("SignUp", style: AppTextStyle.kTextStyleSemiBold22),
         centerTitle: true,
       ),
@@ -43,8 +51,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AppDialogs.showLoadingDialog(context);
                 return;
               }
-              if (Navigator.of(context, rootNavigator: true).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
+              if (state is RegisterErorr || state is RegisterSuccess) {
+                if (Navigator.of(context, rootNavigator: true).canPop()) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                }
               }
               if (state is RegisterErorr) {
                 AppToast.showToast(
@@ -61,7 +71,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   description: 'Account created successfully',
                   type: ToastificationType.success,
                 );
-                //!----------------
+                Navigator.of(
+                  context,
+                ).pushReplacementNamed(AppRoutes.loginRoute);
               }
             },
             child: Column(
@@ -126,9 +138,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   action: TextInputAction.done,
                 ),
                 SizedBox(height: 30),
-                MaterialButton(
-                  minWidth: double.infinity,
-                  height: 50,
+                CustomButton(
+                  text: "Sign up",
+                  backgroundColor: AppColorStyle.lightButtonColor,
+                  textColor: AppColorStyle.bottomNavigationBarBackgroundColor,
+                  borderColor: AppColorStyle.primaryButtonColor,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       var requst = RegisterRequestEntity(
@@ -143,17 +157,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       );
                     }
                   },
-
-                  color: AppColorStyle.lightButtonColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    "Sign up",
-                    style: AppTextStyle.kTextStyleSemiBold16.copyWith(
-                      color: AppColorStyle.bottomNavigationBarBackgroundColor,
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -171,16 +174,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: AppTextStyle.kTextStyleRegular14.copyWith(
                     color: AppColorStyle.secondaryButtonColor,
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Navigator.of(context).pop();
-                    },
+
                   children: [
                     TextSpan(
                       text: "Login",
                       style: AppTextStyle.kTextStyleBold14.copyWith(
                         color: AppColorStyle.secondaryButtonColor,
                       ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.of(context).pushNamed(AppRoutes.loginRoute);
+                        },
                     ),
                   ],
                 ),
