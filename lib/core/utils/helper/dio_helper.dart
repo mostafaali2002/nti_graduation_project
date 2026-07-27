@@ -15,4 +15,25 @@ class DioHelper {
       ),
     );
   }
+
+  static String handleDioError(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'Connection timed out. Please check your internet connection.';
+      case DioExceptionType.badResponse:
+        if (error.response?.data is Map<String, dynamic>) {
+          return error.response?.data['message'] ??
+              'Server error with status code: ${error.response?.statusCode}';
+        }
+        return 'Server error with status code: ${error.response?.statusCode}';
+      case DioExceptionType.cancel:
+        return 'Request was cancelled.';
+      case DioExceptionType.connectionError:
+        return 'No internet connection.';
+      default:
+        return 'Something went wrong. Please try again.';
+    }
+  }
 }
