@@ -3,7 +3,7 @@ import 'package:nti_graduation_project/features/home/domain/entities/all_product
 import 'package:nti_graduation_project/features/home/domain/repo/home_repo_interface.dart';
 
 class GetAllProductUseCase {
-  HomeRepoInterface _homeRepoInterface;
+  final HomeRepoInterface _homeRepoInterface;
   GetAllProductUseCase(this._homeRepoInterface);
   Future<ResultApi<AllProductEntity>> invoke() async =>
       await _homeRepoInterface.getAllProducts();

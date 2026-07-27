@@ -3,7 +3,7 @@ import 'package:nti_graduation_project/features/home/domain/entities/category_en
 import 'package:nti_graduation_project/features/home/domain/repo/home_repo_interface.dart';
 
 class GetCategoriesUseCase {
-  HomeRepoInterface _homeRepoInterface;
+  final HomeRepoInterface _homeRepoInterface;
   GetCategoriesUseCase(this._homeRepoInterface);
   Future<ResultApi<CategoryEntity>> invoke() async =>
       await _homeRepoInterface.getCategories();
