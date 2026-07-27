@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti_graduation_project/core/constant/app_keys.dart';
 import 'package:nti_graduation_project/core/di/service_locator.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
+import 'package:nti_graduation_project/core/storge_helper/secure_storage_helper.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/core/utils/my_bloc_observer.dart';
 import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
@@ -16,6 +18,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
+  String? token = await SecureStorageHelper.instance.getSecure(
+    key: AppKeys.token,
+  );
   SharedPreferences prefs = await SharedPreferences.getInstance();
   configureDependencies();
   bool isOnBoardingDone = prefs.getBool("onBoardingDone") ?? false;
@@ -24,19 +29,20 @@ void main() async {
       ? AppRoutes.helloRoute
       : AppRoutes.onBoarding;
 
-  runApp(ShoppingApp(initialRoute: initialRoute));
+  runApp(ShoppingApp(initialRoute: initialRoute, token: token));
 }
 
 class ShoppingApp extends StatelessWidget {
-  const ShoppingApp({super.key, required this.initialRoute});
+  const ShoppingApp({super.key, required this.initialRoute, this.token});
   final String initialRoute;
+  final String? token;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.loginRoute,
+      initialRoute: token != null ? AppRoutes.homeRoute : initialRoute,
       routes: {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
