@@ -7,7 +7,7 @@ class CategoryDto {
     if (json['list'] != null) {
       categoryList = [];
       json['list'].forEach((v) {
-        categoryList!.add(new CategoryList.fromJson(v));
+        categoryList!.add(CategoryList.fromJson(v));
       });
     }
   }
