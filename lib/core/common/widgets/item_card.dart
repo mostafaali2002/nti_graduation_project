@@ -3,9 +3,19 @@ import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import '../../utils/helper/app_color_style.dart';
 
 class ItemCard extends StatefulWidget {
-  const ItemCard({super.key, required this.image});
+  const ItemCard({
+    super.key,
+    required this.image,
+    required this.productName,
+    required this.rate,
+    required this.productAfterOffer,
+    required this.productBeforOffer,
+  });
   final String image;
-
+  final String productName;
+  final double rate;
+  final double productAfterOffer;
+  final double productBeforOffer;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
@@ -39,7 +49,20 @@ class _ItemCardState extends State<ItemCard> {
                       ),
                     ],
                   ),
-                  Image.asset(widget.image),
+                  Image.network(
+                    widget.image,
+                    fit: .cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.broken_image,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -47,16 +70,22 @@ class _ItemCardState extends State<ItemCard> {
           Row(
             mainAxisAlignment: .spaceBetween,
             children: [
-              Text("T-shirt oversize",style: AppTextStyle.kTextStyleRegular14),
-              Text("⭐4.5",style: AppTextStyle.kTextStyleRegular14,),
+              Text(widget.productName, style: AppTextStyle.kTextStyleRegular14),
+              Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
 
           Row(
             children: [
-              Text("EGP 199",style: AppTextStyle.kTextStyleRegular14,),
-              SizedBox(width: 5,),
-              Text("EGP 255",style: AppTextStyle.kTextStyleDiscount,)
+              Text(
+                "EG ${widget.productAfterOffer}",
+                style: AppTextStyle.kTextStyleRegular14,
+              ),
+              SizedBox(width: 5),
+              Text(
+                "EG ${widget.productBeforOffer}",
+                style: AppTextStyle.kTextStyleDiscount,
+              ),
             ],
           ),
         ],
