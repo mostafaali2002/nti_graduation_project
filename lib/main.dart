@@ -10,6 +10,7 @@ import 'package:nti_graduation_project/features/auth/presentation/view/screen/re
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
+import 'package:nti_graduation_project/features/product_details/presentation/screen/product_details_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -35,7 +36,7 @@ class ShoppingApp extends StatelessWidget {
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.homeRoute,
+      initialRoute: AppRoutes.productdetailsRoute,
       routes: {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
@@ -46,6 +47,7 @@ class ShoppingApp extends StatelessWidget {
           create: (_) => serviceLocator<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
+        AppRoutes.productdetailsRoute: (_) => const ProductDetailsScreen(),
       },
     );
   }
