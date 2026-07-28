@@ -27,6 +27,7 @@ abstract class ThemeApp {
     ),
     dividerColor: AppColorStyle.greyColor,
     splashColor: AppColorStyle.scaffoldBackgroundColor,
+    highlightColor: AppColorStyle.unselectedSmoothPageIndicatorColor,
     useMaterial3: true,
   );
 

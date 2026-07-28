@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_text_field.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
-import 'package:nti_graduation_project/core/utils/app_dialog.dart';
-import 'package:nti_graduation_project/core/utils/app_toast.dart';
+import 'package:nti_graduation_project/core/utils/widgets/app_dialog.dart';
+import 'package:nti_graduation_project/core/utils/widgets/app_toast.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
-import 'package:nti_graduation_project/core/utils/validator_app.dart';
+import 'package:nti_graduation_project/core/utils/helper/validator_app.dart';
 import 'package:nti_graduation_project/features/auth/domain/entities/register_request_entity.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
 import 'package:toastification/toastification.dart';
@@ -51,11 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AppDialogs.showLoadingDialog(context);
                 return;
               }
-              if (state is RegisterErorr || state is RegisterSuccess) {
-                if (Navigator.of(context, rootNavigator: true).canPop()) {
-                  Navigator.of(context, rootNavigator: true).pop();
-                }
-              }
+              Navigator.of(context, rootNavigator: true).pop();
               if (state is RegisterErorr) {
                 AppToast.showToast(
                   context: context,
@@ -71,9 +67,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   description: 'Account created successfully',
                   type: ToastificationType.success,
                 );
-                Navigator.of(
-                  context,
-                ).pushReplacementNamed(AppRoutes.loginRoute);
+
+                Navigator.of(context).pop();
               }
             },
             child: Column(
