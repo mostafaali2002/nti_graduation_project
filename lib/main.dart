@@ -3,8 +3,10 @@ import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
+import 'package:nti_graduation_project/features/home/presentation/view/screens/home_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,11 +31,12 @@ class ShoppingApp extends StatelessWidget {
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.homeRoute,
+      initialRoute: AppRoutes.bottomNavUI,
       routes: {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
-        AppRoutes.homeRoute: (_) => const BottomNavUI(),
+        AppRoutes.homeRoute: (_) => const HomeScreen(),
+        AppRoutes.bottomNavUI: (_) => const BottomNavUI(),
       },
     );
   }

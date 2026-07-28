@@ -4,7 +4,7 @@ import 'package:nti_graduation_project/core/constant/api_constants.dart';
 class DioHelper {
   static late Dio dio;
   static String? token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjFlMDJhYzJjM2VjYTMwZTdhNDRjYiIsImlhdCI6MTc4NTA4MDE4MSwiZXhwIjoxNzg3NjcyMTgxfQ.ReeSk-MDG-gaBxOJ1-05v9dX_Gpix6CkgJFtg5bH3Ac";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjkwYzg1M2M5YzA4YTdiZGE5MTk1OSIsImlhdCI6MTc4NTI2OTQwMCwiZXhwIjoxNzg3ODYxNDAwfQ.4YBfUnv6Mrfh-vX7Dlq2rTecX0MC44xmeli-3XAzG-Y";
   static void init() {
     dio = Dio(
       BaseOptions(
