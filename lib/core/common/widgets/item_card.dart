@@ -3,9 +3,19 @@ import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import '../../utils/helper/app_color_style.dart';
 
 class ItemCard extends StatefulWidget {
-  const ItemCard({super.key, required this.image});
+  const ItemCard({
+    super.key,
+    required this.image,
+    required this.productName,
+    required this.rate,
+    required this.productAfterOffer,
+    required this.productBeforeOffer,
+  });
   final String image;
-
+  final String productName;
+  final double rate;
+  final double productAfterOffer;
+  final double productBeforeOffer;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
@@ -25,38 +35,65 @@ class _ItemCardState extends State<ItemCard> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: .end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isFavourite = !isFavourite;
-                          });
-                        },
-                        icon: isFavourite
-                            ? Icon(Icons.favorite, color: Colors.red)
-                            : Icon(Icons.favorite_border),
-                      ),
-                    ],
+                      mainAxisAlignment: .end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isFavourite = !isFavourite;
+                            });
+                          },
+                          icon: isFavourite
+                              ? Icon(Icons.favorite, color: Colors.red)
+                              : Icon(Icons.favorite_border),
+                        ),
+                      ],
+                    ),
+                  Expanded(
+                    child: Image.network(
+                      widget.image,
+                      fit: .contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[200],
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                            size: 40,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  Image.asset(widget.image),
                 ],
               ),
             ),
           ),
           Row(
-            mainAxisAlignment: .spaceBetween,
             children: [
-              Text("T-shirt oversize",style: AppTextStyle.kTextStyleRegular14),
-              Text("⭐4.5",style: AppTextStyle.kTextStyleRegular14,),
+              Expanded(
+                child: Text(
+                  widget.productName,
+                  style: AppTextStyle.kTextStyleRegular14,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
 
           Row(
             children: [
-              Text("EGP 199",style: AppTextStyle.kTextStyleRegular14,),
-              SizedBox(width: 5,),
-              Text("EGP 255",style: AppTextStyle.kTextStyleDiscount,)
+              Text(
+                "EGP ${widget.productAfterOffer}",
+                style: AppTextStyle.kTextStyleRegular14,
+              ),
+              SizedBox(width: 5),
+              Text(
+                "EGP ${widget.productBeforeOffer}",
+                style: AppTextStyle.kTextStyleDiscount,
+              ),
             ],
           ),
         ],
