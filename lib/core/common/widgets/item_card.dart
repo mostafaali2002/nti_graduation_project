@@ -9,13 +9,13 @@ class ItemCard extends StatefulWidget {
     required this.productName,
     required this.rate,
     required this.productAfterOffer,
-    required this.productBeforOffer,
+    required this.productBeforeOffer,
   });
   final String image;
   final String productName;
   final double rate;
   final double productAfterOffer;
-  final double productBeforOffer;
+  final double productBeforeOffer;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
@@ -35,42 +35,50 @@ class _ItemCardState extends State<ItemCard> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: .end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isFavourite = !isFavourite;
-                          });
-                        },
-                        icon: isFavourite
-                            ? Icon(Icons.favorite, color: Colors.red)
-                            : Icon(Icons.favorite_border),
-                      ),
-                    ],
-                  ),
-                  Image.network(
-                    widget.image,
-                    fit: .cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.broken_image,
-                          color: Colors.grey,
-                          size: 40,
+                      mainAxisAlignment: .end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isFavourite = !isFavourite;
+                            });
+                          },
+                          icon: isFavourite
+                              ? Icon(Icons.favorite, color: Colors.red)
+                              : Icon(Icons.favorite_border),
                         ),
-                      );
-                    },
+                      ],
+                    ),
+                  Expanded(
+                    child: Image.network(
+                      widget.image,
+                      fit: .contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[200],
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                            size: 40,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
           ),
           Row(
-            mainAxisAlignment: .spaceBetween,
             children: [
-              Text(widget.productName, style: AppTextStyle.kTextStyleRegular14),
+              Expanded(
+                child: Text(
+                  widget.productName,
+                  style: AppTextStyle.kTextStyleRegular14,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
@@ -78,12 +86,12 @@ class _ItemCardState extends State<ItemCard> {
           Row(
             children: [
               Text(
-                "EG ${widget.productAfterOffer}",
+                "EGP ${widget.productAfterOffer}",
                 style: AppTextStyle.kTextStyleRegular14,
               ),
               SizedBox(width: 5),
               Text(
-                "EG ${widget.productBeforOffer}",
+                "EGP ${widget.productBeforeOffer}",
                 style: AppTextStyle.kTextStyleDiscount,
               ),
             ],
