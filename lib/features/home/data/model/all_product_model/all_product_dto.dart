@@ -31,6 +31,7 @@ class ProductListDto {
   List<String>? tags;
   String? availabilityStatus;
   List<String>? images;
+  String? thumbnail;
 
   ProductListDto({
     this.id,
@@ -43,6 +44,7 @@ class ProductListDto {
     this.tags,
     this.availabilityStatus,
     this.images,
+    this.thumbnail,
   });
 
   ProductListDto.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class ProductListDto {
     rating = json['rating'];
     tags = json['tags'].cast<String>();
     availabilityStatus = json['availabilityStatus'];
+    thumbnail = json['thumbnail'];
   }
   ProductListEntity toEntity() {
     return ProductListEntity(
@@ -67,6 +70,7 @@ class ProductListDto {
       rating: rating ?? 0.0,
       availabilityStatus: availabilityStatus ?? '',
       images: images ?? [],
+      thumbnail: thumbnail ?? '',
     );
   }
 }
