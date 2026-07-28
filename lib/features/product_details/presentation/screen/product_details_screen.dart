@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
+import 'package:nti_graduation_project/features/home/data/repo/home_data_source_imp.dart';
+import 'package:nti_graduation_project/features/home/data/repo/home_repo_imp.dart';
+import 'package:nti_graduation_project/features/home/domain/use_case/get_all_product_use_case.dart';
+import 'package:nti_graduation_project/features/home/presentation/view_model/get_all_product/get_all_product_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -14,152 +20,265 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isFavourite = false;
-  PageController controller = PageController();
+
   int currentIndex = 0;
+  int currentImageIndex = 0;
 
-  final List<String> images = [
-    "assets/images/orange_t_shirt.png",
-    "assets/images/black_t_shirt.png",
-    "assets/images/orange_t_shirt.png",
-  ];
-  final List<String> productName = [
-    "Nike T-Shirt",
-    "poma T-Shirt",
-    "adidaas T-Shirt",
-  ];
-  final List<double> productAfterOffer = [10, 20, 30];
-  final List<double> productBeforOffer = [20, 30, 40];
-
-  final List<double> rate = [3.2, 4.5, 4.5];
-  final List<String> description = [
-    "Elevate your casual wardrobe with our Classic Red Pullover Hoodie. Crafted with a soft cotton blend for ultimate comfort, this vibrant red hoodie features a kangaroo pocket, adjustable drawstring hood, and ribbed cuffs for a snug fit. The timeless design ensures easy pairing with jeans or joggers for a relaxed yet stylish look, making it a versatile addition to your everyday attire",
-    "  casual wardrobe with our Classic Red Pullover Hoodie. Crafted with a soft cotton blend for ultimate comfort, this vibrant red ",
-    "Pullover Hoodie. Crafted with a soft cotton blend for ultimate comfort, this vibrant red hoodie features a kangaroo pocket, adjustable drawstring hood, and ribbed cuffs for a snug fit. The timeless design ensures easy pairing with jeans or joggers for a relaxed yet stylish look, making it a versatile addition to your everyday attire",
+  final List<Map<String, dynamic>> reviews = [
+    {
+      "name": "Ahmed Ali",
+      "rate": 4.5,
+      "comment": "Great quality, fits perfectly.",
+    },
+    {
+      "name": "Sara Mostafa",
+      "rate": 3.5,
+      "comment": "Good but delivery was a bit late.",
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+    return BlocProvider<GetAllProductCubit>(
+      create: (context) => GetAllProductCubit(
+        getAllProductUseCase: GetAllProductUseCase(
+          HomeRepoImp(HomeDataSourceImp()),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: .center,
-          spacing: 5,
-          children: [
-            SizedBox(
-              height: 315,
-              width: .infinity,
-              child: PageView.builder(
-                controller: controller,
-                onPageChanged: (value) {
-                  setState(() {
-                    currentIndex = value;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      color: AppColorStyle.whiteColor,
-                    ),
-
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: .end,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isFavourite = !isFavourite;
-                                });
-                              },
-                              icon: isFavourite
-                                  ? Icon(Icons.favorite, color: Colors.red)
-                                  : Icon(Icons.favorite_border),
-                            ),
-                          ],
-                        ),
-                        Image.asset(
-                          images[index],
-                          fit: .cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[200],
-                              child: const Icon(
-                                Icons.broken_image,
-                                color: Colors.grey,
-                                size: 40,
-                              ),
-                            );
+      )..getAllProduct(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: BlocBuilder<GetAllProductCubit, GetAllProductState>(
+            builder: (context, state) {
+              if (state is GetAllProductLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is GetAllProductFailure) {
+                return Center(child: Text(state.errorMessage));
+              } else if (state is GetAllProductSuccess) {
+                final product = state.list;
+                final currentImage = product[currentIndex].images;
+                print('Images count: ${currentImage.length}');
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 315,
+                      width: double.infinity,
+                      child: CarouselSlider.builder(
+                        itemCount: currentImage.length,
+                        options: CarouselOptions(
+                          height: 315,
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          enableInfiniteScroll: true,
+                          autoPlayAnimationDuration: const Duration(
+                            milliseconds: 300,
+                          ),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              currentImageIndex = index;
+                            });
                           },
+                        ),
+                        itemBuilder:
+                            (
+                              BuildContext context,
+                              int itemIndex,
+                              int pageViewIndex,
+                            ) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  color: AppColorStyle.whiteColor,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 15,
+                                            vertical: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColorStyle.whiteColor,
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "${product[itemIndex].discountPercentage}% OFF",
+                                            style: AppTextStyle
+                                                .kTextStyleRegular14
+                                                .copyWith(
+                                                  color: AppColorStyle
+                                                      .lightButtonColor,
+                                                ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              isFavourite = !isFavourite;
+                                            });
+                                          },
+                                          icon: isFavourite
+                                              ? const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                )
+                                              : const Icon(
+                                                  Icons.favorite_border,
+                                                ),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: Image.asset(
+                                        currentImage[itemIndex],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    if (currentImage.length > 1)
+                      Center(
+                        child: AnimatedSmoothIndicator(
+                          activeIndex: currentImageIndex,
+                          count: currentImage.length,
+                          effect: WormEffect(
+                            dotHeight: 10,
+                            dotWidth: 10,
+                            spacing: 4,
+                            dotColor: AppColorStyle.lightButtonColor,
+                            activeDotColor: AppColorStyle.secondaryButtonColor,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            product[currentIndex].title,
+                            style: AppTextStyle.kTextStyleRegular16,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "⭐ ${product[currentIndex].rating}",
+                          style: AppTextStyle.kTextStyleRegular16,
                         ),
                       ],
                     ),
-                  );
-                },
-                itemCount: images.length,
-              ),
-            ),
+                    const SizedBox(height: 10),
 
-            SmoothPageIndicator(
-              controller: controller,
-              count: images.length,
-              effect: WormEffect(
-                dotHeight: 10,
-                dotWidth: 10,
-                spacing: 4,
-                dotColor: AppColorStyle.lightButtonColor,
-                activeDotColor: AppColorStyle.secondaryButtonColor,
-              ),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: .spaceEvenly,
-              children: [
-                Text(
-                  productName[currentIndex],
-                  style: AppTextStyle.kTextStyleRegular16,
-                ),
-                Text(
-                  "⭐${rate[currentIndex]}",
-                  style: AppTextStyle.kTextStyleRegular16,
-                ),
-                SizedBox(width: 90),
-                Text(
-                  "EG ${productAfterOffer[currentIndex]}",
-                  style: AppTextStyle.kTextStyleRegular16,
-                ),
+                    Row(
+                      children: [
+                        Text(
+                          "EGP ${product[currentIndex].price * product[currentIndex].discountPercentage / 100}",
+                          style: AppTextStyle.kTextStyleRegular16,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "EGP ${product[currentIndex].price}",
+                          style: AppTextStyle.kTextStyleDiscount.copyWith(
+                            fontSize: AppTextStyle.kTextStyleRegular16.fontSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
 
-                Text(
-                  "EG ${productBeforOffer[currentIndex]}",
-                  style: AppTextStyle.kTextStyleDiscount.copyWith(
-                    fontSize: AppTextStyle.kTextStyleRegular16.fontSize,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 35),
-            Text(
-              description[currentIndex],
-              style: AppTextStyle.kTextStyleRegular16,
-            ),
-          ],
+                    Text(
+                      "Description",
+                      style: AppTextStyle.kTextStyleRegular16,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      product[currentIndex].description,
+                      style: AppTextStyle.kTextStyleRegular14,
+                    ),
+                    const SizedBox(height: 24),
+
+                    Text("Reviews", style: AppTextStyle.kTextStyleRegular16),
+                    const SizedBox(height: 8),
+
+                    Column(
+                      children: reviews.map((review) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColorStyle.whiteColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    review["name"] as String,
+                                    style: AppTextStyle.kTextStyleRegular14,
+                                  ),
+                                  Text(
+                                    "⭐ ${review["rate"]}",
+                                    style: AppTextStyle.kTextStyleRegular14,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                review["comment"] as String,
+                                style: AppTextStyle.kTextStyleRegular14,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                );
+              } else {
+                return Center(child: Text("Something Wrong out of data"));
+              }
+            },
+          ),
         ),
-      ),
-      bottomNavigationBar: CustomButton(
-        text: 'Add to cart',
-        backgroundColor: AppColorStyle.secondaryButtonColor,
-        textColor: AppColorStyle.bottomNavigationBarBackgroundColor,
-        borderColor: AppColorStyle.secondaryButtonColor,
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(16),
+          child: CustomButton(
+            text: 'Add to cart',
+            backgroundColor: AppColorStyle.secondaryButtonColor,
+            textColor: AppColorStyle.bottomNavigationBarBackgroundColor,
+            borderColor: AppColorStyle.secondaryButtonColor,
+          ),
+        ),
       ),
     );
   }
