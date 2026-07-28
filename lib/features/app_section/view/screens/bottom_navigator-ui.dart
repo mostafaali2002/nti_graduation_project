@@ -21,7 +21,12 @@ class BottomNavUI extends StatelessWidget {
           return Scaffold(
             body: IndexedStack(
               index: cubit.currentIndex,
-              children: [Home(), Cart(), Favourite(), Account()],
+              children: [
+                HomeScreen(),
+                CartScreen(),
+                FavouriteScreen(),
+                AccountScreen(),
+              ],
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: .fixed,
