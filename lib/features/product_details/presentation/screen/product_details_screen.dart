@@ -23,6 +23,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   int currentIndex = 0;
   int currentImageIndex = 0;
+  final List<String> images = ['assets/images/orange_t_shirt.png'];
 
   final List<Map<String, dynamic>> reviews = [
     {
@@ -65,7 +66,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               } else if (state is GetAllProductSuccess) {
                 final product = state.list;
                 final currentImage = product[currentIndex].images;
-                print('Images count: ${currentImage.length}');
+                if (currentImage.isEmpty) {
+                  return const Center(child: Text("No Images Available"));
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -119,7 +122,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             ),
                                           ),
                                           child: Text(
-                                            "${product[itemIndex].discountPercentage}% OFF",
+                                            "${product[currentIndex].discountPercentage}% OFF",
                                             style: AppTextStyle
                                                 .kTextStyleRegular14
                                                 .copyWith(
@@ -146,7 +149,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ],
                                     ),
                                     Expanded(
-                                      child: Image.asset(
+                                      child: Image.network(
                                         currentImage[itemIndex],
                                         fit: BoxFit.cover,
                                       ),
@@ -159,20 +162,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    if (currentImage.length > 1)
-                      Center(
-                        child: AnimatedSmoothIndicator(
-                          activeIndex: currentImageIndex,
-                          count: currentImage.length,
-                          effect: WormEffect(
-                            dotHeight: 10,
-                            dotWidth: 10,
-                            spacing: 4,
-                            dotColor: AppColorStyle.lightButtonColor,
-                            activeDotColor: AppColorStyle.secondaryButtonColor,
-                          ),
+                    Center(
+                      child: AnimatedSmoothIndicator(
+                        activeIndex: currentImageIndex,
+                        count: currentImage.length,
+                        effect: WormEffect(
+                          dotHeight: 10,
+                          dotWidth: 10,
+                          spacing: 4,
+                          dotColor: AppColorStyle.lightButtonColor,
+                          activeDotColor: AppColorStyle.secondaryButtonColor,
                         ),
                       ),
+                    ),
                     const SizedBox(height: 16),
 
                     Row(
@@ -197,7 +199,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     Row(
                       children: [
                         Text(
-                          "EGP ${product[currentIndex].price * product[currentIndex].discountPercentage / 100}",
+                          "EGP ${((product[currentIndex].price) - (product[currentIndex].price * product[currentIndex].discountPercentage / 100)).toStringAsFixed(2)}",
                           style: AppTextStyle.kTextStyleRegular16,
                         ),
                         const SizedBox(width: 10),

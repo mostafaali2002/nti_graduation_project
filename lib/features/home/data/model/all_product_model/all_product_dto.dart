@@ -57,6 +57,7 @@ class ProductListDto {
     rating = json['rating'];
     tags = json['tags'].cast<String>();
     availabilityStatus = json['availabilityStatus'];
+    images = List<String>.from(json['images'] ?? []);
     thumbnail = json['thumbnail'];
   }
   ProductListEntity toEntity() {

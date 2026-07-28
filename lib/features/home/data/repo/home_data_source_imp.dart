@@ -23,7 +23,10 @@ class HomeDataSourceImp implements HomeDataSourceInterface {
           headers: {'Authorization': 'Bearer ${DioHelper.token}'},
         ),
       );
+
       final result = AllProductDto.fromJson(response.data).toEntity();
+      print(result.productList.first.images);
+      print(result.productList.first.images.length);
       return Success(result);
     } on DioException catch (e) {
       return Error(
