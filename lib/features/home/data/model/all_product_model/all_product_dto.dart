@@ -1,4 +1,4 @@
-import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
+import '../../../domain/entities/all_product_entity.dart';
 
 class AllProductDto {
   List<ProductListDto>? productList;
@@ -13,6 +13,7 @@ class AllProductDto {
       });
     }
   }
+
   AllProductEntity toEntity() {
     return AllProductEntity(
       productList: productList?.map((e) => e.toEntity()).toList() ?? [],
@@ -32,6 +33,7 @@ class ProductListDto {
   String? availabilityStatus;
   List<String>? images;
   String? thumbnail;
+  int? stock;
 
   ProductListDto({
     this.id,
@@ -45,6 +47,7 @@ class ProductListDto {
     this.availabilityStatus,
     this.images,
     this.thumbnail,
+    this.stock,
   });
 
   ProductListDto.fromJson(Map<String, dynamic> json) {
@@ -55,10 +58,12 @@ class ProductListDto {
     price = json['price'];
     discountPercentage = json['discountPercentage'];
     rating = json['rating'];
-    tags = json['tags'].cast<String>();
+    tags = json['tags']?.cast<String>();
     availabilityStatus = json['availabilityStatus'];
     thumbnail = json['thumbnail'];
+    stock = json['stock'] ?? 0;
   }
+
   ProductListEntity toEntity() {
     return ProductListEntity(
       id: id ?? 0,
@@ -71,6 +76,7 @@ class ProductListDto {
       availabilityStatus: availabilityStatus ?? '',
       images: images ?? [],
       thumbnail: thumbnail ?? '',
+      stock: stock ?? 0,
     );
   }
 }

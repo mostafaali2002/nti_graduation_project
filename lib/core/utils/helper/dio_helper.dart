@@ -4,7 +4,7 @@ import 'package:nti_graduation_project/core/constant/api_constants.dart';
 class DioHelper {
   static late Dio dio;
   static String? token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjFlMDJhYzJjM2VjYTMwZTdhNDRjYiIsImlhdCI6MTc4NTA4MDE4MSwiZXhwIjoxNzg3NjcyMTgxfQ.ReeSk-MDG-gaBxOJ1-05v9dX_Gpix6CkgJFtg5bH3Ac";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNjlmMzhjM2IzY2U3OGFjZDA2YzYzZCIsImlhdCI6MTc4NTMyODU2OSwiZXhwIjoxNzg3OTIwNTY5fQ.77txw7z5r6UQUsWYwn88Ly_DisBM6CUnD585FGUqTao";
   static void init() {
     dio = Dio(
       BaseOptions(
@@ -12,28 +12,14 @@ class DioHelper {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
+          headers: {
+            "Authorization": "Bearer ${DioHelper.token}",
+            "Content-Type": "application/json",
+            'Accept': 'application/json',
+          },
       ),
     );
   }
 
-  static String handleDioError(DioException error) {
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return 'Connection timed out. Please check your internet connection.';
-      case DioExceptionType.badResponse:
-        if (error.response?.data is Map<String, dynamic>) {
-          return error.response?.data['message'] ??
-              'Server error with status code: ${error.response?.statusCode}';
-        }
-        return 'Server error with status code: ${error.response?.statusCode}';
-      case DioExceptionType.cancel:
-        return 'Request was cancelled.';
-      case DioExceptionType.connectionError:
-        return 'No internet connection.';
-      default:
-        return 'Something went wrong. Please try again.';
-    }
-  }
+  //
 }

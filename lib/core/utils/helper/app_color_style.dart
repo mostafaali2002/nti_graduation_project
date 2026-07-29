@@ -13,4 +13,7 @@ abstract class AppColorStyle {
   static const Color bottomNavigationBarBackgroundColor = Color(0xFFEBEBEB);
   static const Color unselectedBottomNavigationBarColor = Color(0xFF5C5C5C);
   static const Color snackBarBackgroundColor = Color(0xFF16A34A);
+  static const Color favoriteIconColor = Color(0xFFE53935);
+
+
 }
