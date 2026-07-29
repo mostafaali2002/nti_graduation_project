@@ -32,14 +32,14 @@ class BottomNavUI extends StatelessWidget {
             body: IndexedStack(
               index: cubit.currentIndex,
               children: [
-                const HomeScreen(),
+                 HomeScreen(),
                 BlocProvider(
-                  create: (context) => _createCartCubit(),
-                  child: const CartScreen(),
+                  create: (context) => createCartCubit(),
+                  child:  CartScreen(),
                 ),
 
-                const Favourite(),
-                const Account(),
+                FavouriteScreen(),
+                AccountScreen(),
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
@@ -87,21 +87,17 @@ class BottomNavUI extends StatelessWidget {
     );
   }
 
-  CartCubit _createCartCubit() {
-    // Data Source
+  CartCubit createCartCubit() {
     final CartDataSourceInterface cartDataSource = CartDataSourceImp();
 
-    // Repository
     final CartRepoInterface cartRepo = CartRepoImp(
       cartDataSource: cartDataSource,
     );
 
-    // Use Cases
     final getCartUseCase = GetCartUseCase(cartRepo: cartRepo);
     final addCartUseCase = AddCartUseCase(cartRepo: cartRepo);
     final deleteCartUseCase = DeleteCartUseCase(cartRepo: cartRepo);
 
-    // Cubit
     return CartCubit(
       getCartUseCase: getCartUseCase,
       addCartUseCase: addCartUseCase,

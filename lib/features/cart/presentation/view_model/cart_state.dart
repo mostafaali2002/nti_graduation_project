@@ -4,7 +4,6 @@ sealed class CartState {}
 
 final class CartInitial extends CartState {}
 
-// ------------------- Get Cart -------------------
 final class GetCartLoading extends CartState {}
 
 final class GetCartSuccess extends CartState {
@@ -18,7 +17,6 @@ final class GetCartFailure extends CartState {
   GetCartFailure(this.message);
 }
 
-// ------------------- Add Cart -------------------
 final class AddCartLoading extends CartState {}
 
 final class AddCartSuccess extends CartState {
@@ -33,7 +31,6 @@ final class AddCartFailure extends CartState {
   AddCartFailure(this.message);
 }
 
-// ------------------- Delete Cart -------------------
 final class DeleteCartLoading extends CartState {}
 
 final class DeleteCartSuccess extends CartState {
@@ -48,7 +45,6 @@ final class DeleteCartFailure extends CartState {
   DeleteCartFailure(this.message);
 }
 
-// ------------------- Update Quantity -------------------
 final class UpdateQuantityLoading extends CartState {}
 
 final class UpdateQuantitySuccess extends CartState {
@@ -62,7 +58,6 @@ final class UpdateQuantityFailure extends CartState {
   UpdateQuantityFailure(this.message);
 }
 
-// ------------------- Out Of Stock -------------------
 final class OutOfStockError extends CartState {
   final String message;
   final CartEntity cart;
