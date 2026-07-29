@@ -25,19 +25,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int currentImageIndex = 0;
   final List<String> images = ['assets/images/orange_t_shirt.png'];
 
-  final List<Map<String, dynamic>> reviews = [
-    {
-      "name": "Ahmed Ali",
-      "rate": 4.5,
-      "comment": "Great quality, fits perfectly.",
-    },
-    {
-      "name": "Sara Mostafa",
-      "rate": 3.5,
-      "comment": "Good but delivery was a bit late.",
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<GetAllProductCubit>(
@@ -228,7 +215,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     const SizedBox(height: 8),
 
                     Column(
-                      children: reviews.map((review) {
+                      children: product[currentIndex].reviews.map((review) {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           padding: const EdgeInsets.all(12),
@@ -244,18 +231,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    review["name"] as String,
+                                    review.reviewerName,
                                     style: AppTextStyle.kTextStyleRegular14,
                                   ),
                                   Text(
-                                    "⭐ ${review["rate"]}",
+                                    "⭐ ${review.rating}",
                                     style: AppTextStyle.kTextStyleRegular14,
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                review["comment"] as String,
+                                review.comment,
                                 style: AppTextStyle.kTextStyleRegular14,
                               ),
                             ],
