@@ -8,4 +8,5 @@ abstract class AppRoutes {
   static const String helloRoute = '/hello';
   static const String onBoarding = '/onBoarding';
   static const String bottomNavUI = '/bottomNavUI';
+  static const String searchScreen = '/searchScreen';
 }

@@ -30,6 +30,7 @@ class _ItemCardState extends State<ItemCard> {
         spacing: 5,
         children: [
           Expanded(
+            flex: 3,
             child: Container(
               color: AppColorStyle.whiteColor,
               child: Column(

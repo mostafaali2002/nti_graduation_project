@@ -88,9 +88,8 @@ class HomeScreen extends StatelessWidget {
                               image: product[index].thumbnail,
                               productName: product[index].title,
                               rate: product[index].rating,
-                              productAfterOffer: product[index].price,
-                              productBeforeOffer:
-                                  product[index].discountPercentage,
+                              productAfterOffer: (((product[index].discountPercentage)/100)*product[index].price).ceilToDouble(),
+                              productBeforeOffer: product[index].price.ceilToDouble(),
                             );
                           },
                         );

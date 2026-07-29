@@ -16,18 +16,57 @@ class HomeDataSourceImp implements HomeDataSourceInterface {
   @override
   Future<ResultApi<AllProductEntity>> getAllProducts() async {
     try {
-      DioHelper.init();
       final response = await DioHelper.dio.get(
         ApiConstant.allProductEndPoint,
         options: Options(
-          headers: {'Authorization': 'Bearer ${DioHelper.token}'},
+          headers: {
+            'Authorization': 'Bearer ${DioHelper.token}',
+          },
         ),
       );
+
       final result = AllProductDto.fromJson(response.data).toEntity();
+
+
       return Success(result);
     } on DioException catch (e) {
       return Error(
         e.response?.data["message"] ?? e.message ?? "Something went wrong",
+      );
+    } catch (e) {
+      return Error(e.toString());
+    }
+  }
+
+  @override
+  Future<ResultApi<AllProductEntity>> searchProducts({
+    required String query,
+    int skip = 0,
+    int limit = 10,
+  }) async {
+    try {
+      final response = await DioHelper.dio.post(
+        ApiConstant.searchEndPoint,
+        data: {
+          'search': query,
+          'skip': skip,
+          'limit': limit,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${DioHelper.token}',
+          },
+        ),
+      );
+
+
+      final result = AllProductDto.fromJson(response.data).toEntity();
+
+
+      return Success(result);
+    } on DioException catch (e) {
+      return Error(
+        e.response?.data["message"] ?? e.message ?? "Search failed",
       );
     } catch (e) {
       return Error(e.toString());
