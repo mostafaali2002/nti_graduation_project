@@ -13,6 +13,12 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:nti_graduation_project/core/storage_helper/secure_storage_helper.dart'
     as _i151;
+import 'package:nti_graduation_project/features/account/domain/repo/account_data_source_interface.dart'
+    as _i335;
+import 'package:nti_graduation_project/features/account/domain/repo/account_repo_interface.dart'
+    as _i770;
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart'
+    as _i504;
 import 'package:nti_graduation_project/features/auth/data/repo/auth_data_source_implem.dart'
     as _i231;
 import 'package:nti_graduation_project/features/auth/data/repo/auth_repo_implem.dart'
@@ -29,6 +35,12 @@ import 'package:nti_graduation_project/features/auth/presentation/view_model/log
     as _i137;
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart'
     as _i788;
+import 'package:nti_graduation_project/features/home/data/repo/account_repo/account_data_source_imp.dart'
+    as _i942;
+import 'package:nti_graduation_project/features/home/data/repo/account_repo/account_repo_imp.dart'
+    as _i865;
+import 'package:nti_graduation_project/features/home/domain/use_case/post_account_info_use_case.dart'
+    as _i359;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -41,11 +53,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i331.AuthDataSourceInterface>(
       () => _i231.AuthDataSourceImplem(),
     );
+    gh.factory<_i335.AccountDataSourceInterface>(
+      () => _i942.AccountDataSourceImp(),
+    );
+    gh.factory<_i770.AccountRepoInterface>(
+      () => _i865.AccountRepoImp(gh<_i335.AccountDataSourceInterface>()),
+    );
     gh.factory<_i48.AuthRepoInterface>(
       () => _i694.AuthRepoImplem(
         gh<_i331.AuthDataSourceInterface>(),
         gh<_i151.SecureStorageHelper>(),
       ),
+    );
+    gh.factory<_i359.PostAccountInfoUseCase>(
+      () => _i359.PostAccountInfoUseCase(gh<_i770.AccountRepoInterface>()),
     );
     gh.factory<_i9.LoginUseCase>(
       () => _i9.LoginUseCase(gh<_i48.AuthRepoInterface>()),
@@ -55,6 +76,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i788.RegisterCubit>(
       () => _i788.RegisterCubit(gh<_i103.RegisterUseCase>()),
+    );
+    gh.factory<_i504.AccountCubit>(
+      () => _i504.AccountCubit(
+        accountInfoUseCase: gh<_i359.PostAccountInfoUseCase>(),
+      ),
     );
     gh.factory<_i137.LoginCubit>(
       () => _i137.LoginCubit(gh<_i9.LoginUseCase>()),

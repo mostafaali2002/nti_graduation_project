@@ -5,8 +5,8 @@ import 'package:nti_graduation_project/features/cart/presentation/view/screens/c
 import 'package:nti_graduation_project/core/constant/app_assets.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/app_section_cubit.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view/screens/favourite_screen.dart';
-import 'package:nti_graduation_project/features/home/presentation/view/screens/home_screen.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/app_section_states.dart';
+import 'package:nti_graduation_project/features/home/presentation/view/screens/home_screen.dart';
 import '../widgets/nav_icon.dart';
 
 class BottomNavUI extends StatelessWidget {

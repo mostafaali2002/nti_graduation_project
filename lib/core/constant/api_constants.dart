@@ -5,4 +5,6 @@ abstract class ApiConstant {
       '$baseUrl/home/products?skip=0&limit=10';
   static const String register = '$baseUrl/auth/signUp';
   static const String login = '$baseUrl/auth/signIn';
+  static const String accountEndPointGet = '$baseUrl/portfoilo/userData';
+  static const String accountEndPointPost = '$baseUrl/portfoilo/editUserData';
 }

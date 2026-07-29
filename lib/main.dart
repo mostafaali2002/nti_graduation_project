@@ -6,10 +6,11 @@ import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/storage_helper/secure_storage_helper.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/core/utils/bloc/my_bloc_observer.dart';
+import 'package:nti_graduation_project/features/account/presentation/view/screens/account_screen.dart';
 import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/login_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/register_screen.dart';
-import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
@@ -42,16 +43,16 @@ class ShoppingApp extends StatelessWidget {
       theme: ThemeApp.lightTheme,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute: token != null ? AppRoutes.homeRoute : initialRoute,
+      initialRoute: AppRoutes.accountRoute,
       routes: {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
         AppRoutes.homeRoute: (_) => const BottomNavUI(),
-        AppRoutes.loginRoute: (_) => BlocProvider(
-          create: (context) => serviceLocator<LoginCubit>(),
-          child: LoginScreen(),
+        AppRoutes.accountRoute: (_) => BlocProvider(
+          create: (context) => serviceLocator<AccountCubit>(),
+          child: const AccountScreen(),
         ),
-
+        AppRoutes.loginRoute: (_) => LoginScreen(),
         AppRoutes.signupRoute: (_) => BlocProvider(
           create: (_) => serviceLocator<RegisterCubit>(),
           child: const RegisterScreen(),
