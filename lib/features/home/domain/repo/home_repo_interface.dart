@@ -5,4 +5,9 @@ import 'package:nti_graduation_project/features/home/domain/entities/category_en
 abstract interface class HomeRepoInterface {
   Future<ResultApi<CategoryEntity>> getCategories();
   Future<ResultApi<AllProductEntity>> getAllProducts();
+  Future<ResultApi<AllProductEntity>> getProductsByCategory({
+    required String slug,
+    int skip = 0,
+    int limit = 5,
+  });
 }
