@@ -13,7 +13,6 @@ import 'package:nti_graduation_project/features/auth/presentation/view_model/log
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
-import 'package:nti_graduation_project/features/products_by_category/presentation/view/screen/products_by_category_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -57,18 +56,6 @@ class ShoppingApp extends StatelessWidget {
           create: (_) => serviceLocator<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
-      },
-      onGenerateRoute: (settings) {
-        if (settings.name == AppRoutes.productByCatgoryRoute) {
-          final args = settings.arguments as Map<String, String>? ?? {};
-          return MaterialPageRoute(
-            builder: (_) => ProductsByCategoryScreen(
-              slug: args['slug'] ?? '',
-              categoryName: args['categoryName'] ?? '',
-            ),
-          );
-        }
-        return null;
       },
     );
   }

@@ -12,14 +12,14 @@ class GetProductsByCategoryCubit extends Cubit<GetProductsByCategoryState> {
 
   Future<void> getProductsByCategory({
     required String slug,
-    int skip = 0,
-    int limit = 5,
+    int? skip,
+    int? limit,
   }) async {
     emit(GetProductsByCategoryLoading());
     final result = await _getProductsByCategoryUseCase.invoke(
       slug: slug,
-      skip: skip,
-      limit: limit,
+      skip: skip ?? 0,
+      limit: limit ?? 5,
     );
     switch (result) {
       case Success<AllProductEntity>():

@@ -7,6 +7,7 @@ import 'package:nti_graduation_project/features/home/domain/use_case/get_all_pro
 import 'package:nti_graduation_project/features/home/domain/use_case/get_item_use_case.dart';
 import 'package:nti_graduation_project/features/home/presentation/view_model/get_all_product/get_all_product_cubit.dart';
 import 'package:nti_graduation_project/features/home/presentation/view_model/get_category_cubit/get_category_cubit.dart';
+import 'package:nti_graduation_project/features/products_by_category/presentation/view/screen/products_by_category_screen.dart';
 import '../../../../../core/common/widgets/item_card.dart';
 import '../../../../../core/routes/app_routes.dart';
 import '../../../../app_section/view/widgets/category_cart.dart';
@@ -62,13 +63,15 @@ class HomeScreen extends StatelessWidget {
                                 return CategoryCart(
                                   title: category.name,
                                   onTap: () {
-                                    Navigator.pushNamed(
+                                    Navigator.push(
                                       context,
-                                      AppRoutes.productByCatgoryRoute,
-                                      arguments: {
-                                        'slug': category.slug,
-                                        'categoryName': category.name,
-                                      },
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            ProductsByCategoryScreen(
+                                              slug: category.slug,
+                                              categoryName: category.name,
+                                            ),
+                                      ),
                                     );
                                   },
                                 );
