@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart'; // ✅ استخدم الـ Entity من الـ Home
+import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 import '../../../../../core/constant/app_assets.dart';
 
 class CartItem extends StatelessWidget {
