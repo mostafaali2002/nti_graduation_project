@@ -27,10 +27,12 @@ abstract class ThemeApp {
     ),
     dividerColor: AppColorStyle.greyColor,
     splashColor: AppColorStyle.scaffoldBackgroundColor,
+    highlightColor: AppColorStyle.unselectedSmoothPageIndicatorColor,
     useMaterial3: true,
   );
 
   static const TextTheme lightTextTheme = TextTheme(
+    displaySmall: AppTextStyle.kTextStyleBold14,
     displayLarge: AppTextStyle.kTextStyleMedium48,
     headlineLarge: AppTextStyle.kTextStyleSemiBold24,
     headlineMedium: AppTextStyle.kTextStyleBold22,

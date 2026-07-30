@@ -34,6 +34,7 @@ class ProductListDto {
   List<String>? images;
   String? thumbnail;
   int? stock;
+  List<ReviewDto>? reviews;
 
   ProductListDto({
     this.id,
@@ -48,6 +49,7 @@ class ProductListDto {
     this.images,
     this.thumbnail,
     this.stock,
+    this.reviews,
   });
 
   ProductListDto.fromJson(Map<String, dynamic> json) {
@@ -60,8 +62,12 @@ class ProductListDto {
     rating = json['rating'];
     tags = json['tags']?.cast<String>();
     availabilityStatus = json['availabilityStatus'];
+    images = List<String>.from(json['images'] ?? []);
     thumbnail = json['thumbnail'];
     stock = json['stock'] ?? 0;
+    reviews = (json['reviews'] as List? ?? [])
+        .map((v) => ReviewDto.fromJson(v))
+        .toList();
   }
 
   ProductListEntity toEntity() {
@@ -77,6 +83,41 @@ class ProductListDto {
       images: images ?? [],
       thumbnail: thumbnail ?? '',
       stock: stock ?? 0,
+      reviews: reviews?.map((e) => e.toEntity()).toList() ?? [],
+    );
+  }
+}
+
+class ReviewDto {
+  int? rating;
+  String? comment;
+  String? date;
+  String? reviewerName;
+  String? reviewerEmail;
+
+  ReviewDto({
+    this.rating,
+    this.comment,
+    this.date,
+    this.reviewerName,
+    this.reviewerEmail,
+  });
+
+  ReviewDto.fromJson(Map<String, dynamic> json) {
+    rating = json['rating'];
+    comment = json['comment'];
+    date = json['date'];
+    reviewerName = json['reviewerName'];
+    reviewerEmail = json['reviewerEmail'];
+  }
+
+  ReviewEntity toEntity() {
+    return ReviewEntity(
+      rating: rating ?? 0,
+      comment: comment ?? '',
+      date: date ?? '',
+      reviewerName: reviewerName ?? '',
+      reviewerEmail: reviewerEmail ?? '',
     );
   }
 }
