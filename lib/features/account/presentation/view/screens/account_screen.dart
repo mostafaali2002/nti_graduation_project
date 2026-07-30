@@ -1,7 +1,7 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
@@ -13,9 +13,9 @@ import 'package:nti_graduation_project/core/utils/widgets/app_dialog.dart';
 import 'package:nti_graduation_project/core/utils/widgets/app_toast.dart';
 import 'package:nti_graduation_project/features/app_section/view/widgets/image_picker_icon_option.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart';
-
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_cubit.dart';
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_state.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/account_entity.dart';
-
 import 'package:toastification/toastification.dart';
 
 import '../../../../../core/routes/app_routes.dart';
@@ -29,37 +29,47 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  var formKey = GlobalKey<FormState>();
-  var emailController = TextEditingController();
-  var nameController = TextEditingController();
-  var phoneController = TextEditingController();
-  var addressController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  late final TextEditingController emailController;
+  late final TextEditingController nameController;
+  late final TextEditingController phoneController;
+  late final TextEditingController addressController;
+
   Uint8List? _image;
+  String? _networkImageUrl;
   final picker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
-    emailController.text = "fathy@gmail.com";
-    nameController.text = "fathy";
-    phoneController.text = "01001289114";
-    addressController.text = "sdsfsf";
+    emailController = TextEditingController();
+    nameController = TextEditingController();
+    phoneController = TextEditingController();
+    addressController = TextEditingController();
+    setState(() {});
+    context.read<GetAccountCubit>().getData();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Form(
-            key: formKey,
-            child: BlocListener<AccountCubit, AccountState>(
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<GetAccountCubit, GetAccountState>(
+              listener: (context, state) {
+                if (state is GetAccountSucess) {}
+              },
+            ),
+            BlocListener<AccountCubit, AccountState>(
               listener: (context, state) {
                 if (state is AccountLoading) {
                   AppDialogs.showLoadingDialog(context);
                   return;
                 }
                 Navigator.of(context, rootNavigator: true).pop();
+
                 if (state is AccountError) {
                   AppToast.showToast(
                     context: context,
@@ -72,113 +82,152 @@ class _AccountScreenState extends State<AccountScreen> {
                   AppToast.showToast(
                     context: context,
                     title: 'Success',
-                    description: 'Account created successfully',
+                    description: 'Account updated successfully',
                     type: ToastificationType.success,
                   );
-
-                  Navigator.of(context).pop();
                 }
               },
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Center(
-                      child: Stack(
+            ),
+          ],
+          child: BlocBuilder<GetAccountCubit, GetAccountState>(
+            builder: (context, state) {
+              if (state is GetAccountLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (state is GetAccountError) {
+                return Center(child: Text("GetAccountError"));
+              }
+              if (state is GetAccountSucess) {
+                nameController.text = state.data.message!.name;
+                emailController.text = state.data.message!.email;
+                phoneController.text = state.data.message!.phone;
+                addressController.text = state.data.message!.address;
+
+                _networkImageUrl = state.data.message!.image;
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Form(
+                    key: formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 100,
-                            backgroundImage: _image != null
-                                ? MemoryImage(_image!)
-                                : NetworkImage(
-                                    "https://tse2.mm.bing.net/th/id/OIP.wvRIhOFzGU982n--4ZGBMgHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+                          const SizedBox(height: 20),
+                          Center(
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  radius: 80,
+                                  backgroundImage: _image != null
+                                      ? MemoryImage(_image!)
+                                      : const NetworkImage(
+                                              "https://tse2.mm.bing.net/th/id/OIP.wvRIhOFzGU982n--4ZGBMgHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+                                            )
+                                            as ImageProvider,
+                                ),
+                                Positioned(
+                                  right: 1,
+                                  bottom: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      showImagePickerOption(context);
+                                    },
+                                    icon: const Icon(Icons.camera_alt),
+                                    iconSize: 36,
                                   ),
-                          ),
-                          Positioned(
-                            right: 1,
-                            bottom: 1,
-                            child: IconButton(
-                              onPressed: () {
-                                showImagePickerOption(context);
-                              },
-                              icon: Icon(Icons.camera_alt),
-                              iconSize: 42,
+                                ),
+                              ],
                             ),
                           ),
+                          const SizedBox(height: 32),
+                          Text(
+                            "Full Name",
+                            style: AppTextStyle.kTextStyleRegular18,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomTextFormField(
+                            controller: nameController,
+                            validator: Validator.validateName,
+                            hintText: state.data.message?.name,
+                            keyboardType: TextInputType.text,
+                            action: TextInputAction.next,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Email",
+                            style: AppTextStyle.kTextStyleRegular18,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomTextFormField(
+                            controller: emailController,
+                            validator: Validator.validateEmail,
+                            hintText: state.data.message?.email,
+                            keyboardType: TextInputType.emailAddress,
+                            action: TextInputAction.next,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Phone Number",
+                            style: AppTextStyle.kTextStyleRegular18,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomTextFormField(
+                            controller: phoneController,
+                            validator: Validator.validatePhoneNumber,
+                            hintText: state.data.message?.phone,
+                            keyboardType: TextInputType.phone,
+                            action: TextInputAction.done,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Address",
+                            style: AppTextStyle.kTextStyleRegular18,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomTextFormField(
+                            controller: addressController,
+                            validator: Validator.validateName,
+                            hintText: state.data.message?.address,
+                            keyboardType: TextInputType.emailAddress,
+                            action: TextInputAction.done,
+                          ),
+                          const SizedBox(height: 32),
+                          CustomButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                String? imageString = _image != null
+                                    ? base64Encode(_image!)
+                                    : _networkImageUrl;
+
+                                var request = ProfileEntity(
+                                  email: emailController.text,
+                                  name: nameController.text,
+                                  phone: phoneController.text,
+                                  address: addressController.text,
+                                  image: imageString.toString(),
+                                );
+
+                                context.read<AccountCubit>().intent(
+                                  AccountIntintEdite(request),
+                                );
+                              }
+                            },
+                            text: "Submit",
+                            backgroundColor: AppColorStyle.secondaryButtonColor,
+                            textColor: AppColorStyle.disabledButtonColor,
+                            borderColor: AppColorStyle.secondaryButtonColor,
+                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
-                    SizedBox(height: 32),
-                    Text("Full Name", style: AppTextStyle.kTextStyleRegular18),
-                    SizedBox(height: 5),
-                    CustomTextFormField(
-                      controller: nameController,
-                      validator: Validator.validateName,
-                      hintText: "Enter your Full Name",
-                      keyboardType: TextInputType.text,
-                      action: TextInputAction.next,
-                    ),
-                    SizedBox(height: 16),
-                    Text("Email", style: AppTextStyle.kTextStyleRegular18),
-                    SizedBox(height: 5),
-                    CustomTextFormField(
-                      controller: emailController,
-                      validator: Validator.validateEmail,
-                      hintText: "Enter your email",
-                      keyboardType: TextInputType.emailAddress,
-                      action: TextInputAction.next,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      "Phone Number",
-                      style: AppTextStyle.kTextStyleRegular18,
-                    ),
-                    SizedBox(height: 5),
-                    CustomTextFormField(
-                      controller: phoneController,
-                      validator: Validator.validatePhoneNumber,
-                      hintText: "Enter your Phone Number ",
-                      keyboardType: TextInputType.phone,
-                      action: TextInputAction.next,
-                    ),
-                    SizedBox(height: 16),
-                    Text("Address", style: AppTextStyle.kTextStyleRegular18),
-                    SizedBox(height: 5),
-                    CustomTextFormField(
-                      controller: addressController,
-                      validator: Validator.validateName,
-                      hintText: "Enter your email",
-                      keyboardType: TextInputType.emailAddress,
-                      action: TextInputAction.next,
-                    ),
-                    SizedBox(height: 20),
-                    CustomButton(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          var request = ProfileEntity(
-                            email: emailController.text,
-                            name: nameController.text,
-                            phone: nameController.text,
-                            image: _image.toString(),
-                          );
-                          context.read<AccountCubit>().intent(
-                            AccountIntintEdite(request),
-                          );
-                          Navigator.of(
-                            context,
-                          ).pushNamed(AppRoutes.accountRoute);
-                        }
-                      },
-                      text: "Submit",
-                      backgroundColor: AppColorStyle.secondaryButtonColor,
-                      textColor: AppColorStyle.disabledButtonColor,
-                      borderColor: AppColorStyle.secondaryButtonColor,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
           ),
         ),
       ),
@@ -191,7 +240,7 @@ class _AccountScreenState extends State<AccountScreen> {
       imageQuality: 80,
     );
     if (picked == null) return;
-    _image = File(picked.path).readAsBytesSync();
+    _image = await picked.readAsBytes();
     setState(() {});
   }
 
@@ -201,7 +250,7 @@ class _AccountScreenState extends State<AccountScreen> {
       imageQuality: 80,
     );
     if (picked == null) return;
-    _image = File(picked.path).readAsBytesSync();
+    _image = await picked.readAsBytes();
     setState(() {});
   }
 
@@ -215,8 +264,8 @@ class _AccountScreenState extends State<AccountScreen> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 4.5,
             child: Row(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: .center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: ImagePickerIconOption(

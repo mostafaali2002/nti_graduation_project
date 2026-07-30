@@ -1,11 +1,11 @@
-import 'package:nti_graduation_project/features/home/domain/entities/account_entity.dart';
+import 'package:nti_graduation_project/features/home/domain/entities/get_account_entity.dart';
 
 sealed class GetAccountState {}
 
 final class GetAccountInitial extends GetAccountState {}
 
 final class GetAccountSucess extends GetAccountState {
-  final ProfileEntity data;
+  final GetProfileEntity data;
 
   GetAccountSucess({required this.data});
 }
