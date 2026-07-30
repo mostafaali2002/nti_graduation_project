@@ -9,6 +9,7 @@ import 'package:nti_graduation_project/core/utils/bloc/my_bloc_observer.dart';
 import 'package:nti_graduation_project/features/account/presentation/view/screens/account_screen.dart';
 import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart';
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_cubit.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/login_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/register_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
@@ -48,8 +49,13 @@ class ShoppingApp extends StatelessWidget {
         AppRoutes.onBoarding: (_) => const OnbordingScreen(),
         AppRoutes.helloRoute: (_) => const HelloScreen(),
         AppRoutes.homeRoute: (_) => const BottomNavUI(),
-        AppRoutes.accountRoute: (_) => BlocProvider(
-          create: (context) => serviceLocator<AccountCubit>(),
+        AppRoutes.accountRoute: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => serviceLocator<AccountCubit>()),
+            BlocProvider(
+              create: (context) => serviceLocator<GetAccountCubit>(),
+            ),
+          ],
           child: const AccountScreen(),
         ),
         AppRoutes.loginRoute: (_) => LoginScreen(),

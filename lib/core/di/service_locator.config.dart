@@ -19,6 +19,8 @@ import 'package:nti_graduation_project/features/account/domain/repo/account_repo
     as _i770;
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart'
     as _i504;
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_cubit.dart'
+    as _i642;
 import 'package:nti_graduation_project/features/auth/data/repo/auth_data_source_implem.dart'
     as _i231;
 import 'package:nti_graduation_project/features/auth/data/repo/auth_repo_implem.dart'
@@ -39,6 +41,8 @@ import 'package:nti_graduation_project/features/home/data/repo/account_repo/acco
     as _i942;
 import 'package:nti_graduation_project/features/home/data/repo/account_repo/account_repo_imp.dart'
     as _i865;
+import 'package:nti_graduation_project/features/home/domain/use_case/get_account_info_use_case.dart'
+    as _i90;
 import 'package:nti_graduation_project/features/home/domain/use_case/post_account_info_use_case.dart'
     as _i359;
 
@@ -58,6 +62,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i770.AccountRepoInterface>(
       () => _i865.AccountRepoImp(gh<_i335.AccountDataSourceInterface>()),
+    );
+    gh.factory<_i90.GetAccountUseCase>(
+      () => _i90.GetAccountUseCase(gh<_i770.AccountRepoInterface>()),
+    );
+    gh.factory<_i642.GetAccountCubit>(
+      () => _i642.GetAccountCubit(
+        accountInfoUseCase: gh<_i90.GetAccountUseCase>(),
+      ),
     );
     gh.factory<_i48.AuthRepoInterface>(
       () => _i694.AuthRepoImplem(

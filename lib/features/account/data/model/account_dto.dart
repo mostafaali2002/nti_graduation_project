@@ -5,8 +5,9 @@ class ProfileDto {
   String? phone;
   String? email;
   String? image;
+  String? address;
 
-  ProfileDto({this.name, this.phone, this.email, this.image});
+  ProfileDto({this.name, this.phone, this.email, this.image, this.address});
 
   ProfileEntity toEntity() {
     return ProfileEntity(
@@ -14,6 +15,7 @@ class ProfileDto {
       image: image ?? '',
       name: name ?? '',
       phone: phone ?? '',
+      address: address ?? '',
     );
   }
 
@@ -22,6 +24,7 @@ class ProfileDto {
     phone = json['phone'];
     email = json['email'];
     image = json['image'];
+    address = json['address'];
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -29,6 +32,7 @@ class ProfileDto {
     data['phone'] = phone;
     data['email'] = email;
     data['image'] = image;
+    data['address'] = address;
 
     return data;
   }

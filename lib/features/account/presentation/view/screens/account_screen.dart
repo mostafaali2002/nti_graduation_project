@@ -30,11 +30,21 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   var formKey = GlobalKey<FormState>();
-  var emailController = TextEditingController(text: "fathy@gmail.com");
-  var nameController = TextEditingController(text: "fathy");
-  var phoneController = TextEditingController(text: "01001289114");
+  var emailController = TextEditingController();
+  var nameController = TextEditingController();
+  var phoneController = TextEditingController();
+  var addressController = TextEditingController();
   Uint8List? _image;
   final picker = ImagePicker();
+  @override
+  void initState() {
+    super.initState();
+    emailController.text = "fathy@gmail.com";
+    nameController.text = "fathy";
+    phoneController.text = "01001289114";
+    addressController.text = "sdsfsf";
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,86 +79,104 @@ class _AccountScreenState extends State<AccountScreen> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 100,
-                          backgroundImage: _image != null
-                              ? MemoryImage(_image!)
-                              : NetworkImage(
-                                  "https://tse2.mm.bing.net/th/id/OIP.wvRIhOFzGU982n--4ZGBMgHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
-                                ),
-                        ),
-                        Positioned(
-                          right: 1,
-                          bottom: 1,
-                          child: IconButton(
-                            onPressed: () {
-                              showImagePickerOption(context);
-                            },
-                            icon: Icon(Icons.camera_alt),
-                            iconSize: 42,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Center(
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 100,
+                            backgroundImage: _image != null
+                                ? MemoryImage(_image!)
+                                : NetworkImage(
+                                    "https://tse2.mm.bing.net/th/id/OIP.wvRIhOFzGU982n--4ZGBMgHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+                                  ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            right: 1,
+                            bottom: 1,
+                            child: IconButton(
+                              onPressed: () {
+                                showImagePickerOption(context);
+                              },
+                              icon: Icon(Icons.camera_alt),
+                              iconSize: 42,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 32),
-                  Text("Full Name", style: AppTextStyle.kTextStyleRegular18),
-                  SizedBox(height: 5),
-                  CustomTextFormField(
-                    controller: nameController,
-                    validator: Validator.validateName,
-                    hintText: "Enter your Full Name",
-                    keyboardType: TextInputType.text,
-                    action: TextInputAction.next,
-                  ),
-                  SizedBox(height: 16),
-                  Text("Email", style: AppTextStyle.kTextStyleRegular18),
-                  SizedBox(height: 5),
-                  CustomTextFormField(
-                    controller: emailController,
-                    validator: Validator.validateEmail,
-                    hintText: "Enter your email",
-                    keyboardType: TextInputType.emailAddress,
-                    action: TextInputAction.next,
-                  ),
-                  SizedBox(height: 16),
-                  Text("Phone Number", style: AppTextStyle.kTextStyleRegular18),
-                  SizedBox(height: 5),
-                  CustomTextFormField(
-                    controller: phoneController,
-                    validator: Validator.validatePhoneNumber,
-                    hintText: "Enter your Phone Number ",
-                    keyboardType: TextInputType.phone,
-                    action: TextInputAction.next,
-                  ),
-                  Expanded(child: SizedBox()),
-                  CustomButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        var request = ProfileEntity(
-                          email: emailController.text,
-                          name: nameController.text,
-                          phone: nameController.text,
-                          image: _image.toString(),
-                        );
-                        context.read<AccountCubit>().intent(
-                          AccountIntintEdite(request),
-                        );
-                        Navigator.of(context).pushNamed(AppRoutes.accountRoute);
-                      }
-                    },
-                    text: "Submit",
-                    backgroundColor: AppColorStyle.secondaryButtonColor,
-                    textColor: AppColorStyle.disabledButtonColor,
-                    borderColor: AppColorStyle.secondaryButtonColor,
-                  ),
-                ],
+                    SizedBox(height: 32),
+                    Text("Full Name", style: AppTextStyle.kTextStyleRegular18),
+                    SizedBox(height: 5),
+                    CustomTextFormField(
+                      controller: nameController,
+                      validator: Validator.validateName,
+                      hintText: "Enter your Full Name",
+                      keyboardType: TextInputType.text,
+                      action: TextInputAction.next,
+                    ),
+                    SizedBox(height: 16),
+                    Text("Email", style: AppTextStyle.kTextStyleRegular18),
+                    SizedBox(height: 5),
+                    CustomTextFormField(
+                      controller: emailController,
+                      validator: Validator.validateEmail,
+                      hintText: "Enter your email",
+                      keyboardType: TextInputType.emailAddress,
+                      action: TextInputAction.next,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      "Phone Number",
+                      style: AppTextStyle.kTextStyleRegular18,
+                    ),
+                    SizedBox(height: 5),
+                    CustomTextFormField(
+                      controller: phoneController,
+                      validator: Validator.validatePhoneNumber,
+                      hintText: "Enter your Phone Number ",
+                      keyboardType: TextInputType.phone,
+                      action: TextInputAction.next,
+                    ),
+                    SizedBox(height: 16),
+                    Text("Address", style: AppTextStyle.kTextStyleRegular18),
+                    SizedBox(height: 5),
+                    CustomTextFormField(
+                      controller: addressController,
+                      validator: Validator.validateName,
+                      hintText: "Enter your email",
+                      keyboardType: TextInputType.emailAddress,
+                      action: TextInputAction.next,
+                    ),
+                    SizedBox(height: 20),
+                    CustomButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          var request = ProfileEntity(
+                            email: emailController.text,
+                            name: nameController.text,
+                            phone: nameController.text,
+                            image: _image.toString(),
+                          );
+                          context.read<AccountCubit>().intent(
+                            AccountIntintEdite(request),
+                          );
+                          Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.accountRoute);
+                        }
+                      },
+                      text: "Submit",
+                      backgroundColor: AppColorStyle.secondaryButtonColor,
+                      textColor: AppColorStyle.disabledButtonColor,
+                      borderColor: AppColorStyle.secondaryButtonColor,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
