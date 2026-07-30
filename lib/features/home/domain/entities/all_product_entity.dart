@@ -15,6 +15,7 @@ class ProductListEntity {
   String availabilityStatus;
   List<String> images;
   String thumbnail;
+  List<ReviewEntity> reviews;
 
   ProductListEntity({
     this.id = 0,
@@ -27,5 +28,22 @@ class ProductListEntity {
     this.availabilityStatus = '',
     this.images = const [],
     this.thumbnail = "",
+    this.reviews = const [],
+  });
+}
+
+class ReviewEntity {
+  int rating;
+  String comment;
+  String date;
+  String reviewerName;
+  String reviewerEmail;
+
+  ReviewEntity({
+    this.rating = 0,
+    this.comment = '',
+    this.date = '',
+    this.reviewerName = '',
+    this.reviewerEmail = '',
   });
 }
