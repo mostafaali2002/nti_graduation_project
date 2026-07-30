@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
+import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
+import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_states.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_data_source_imp.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_repo_imp.dart';
 import 'package:nti_graduation_project/features/home/domain/use_case/get_products_by_category_use_case.dart';
 import 'package:nti_graduation_project/features/products_by_category/presentation/view_model/productsbycatgory/get_products_by_category_cubit.dart';
+import 'package:nti_graduation_project/features/search/presentation/view/search_screen.dart';
 import '../../../../../core/common/widgets/item_card.dart';
 import '../../../../../core/routes/app_routes.dart';
 
@@ -14,25 +18,37 @@ class ProductsByCategoryScreen extends StatelessWidget {
     required this.slug,
     required this.categoryName,
   });
+
   final String slug;
   final String categoryName;
   static const routeName = AppRoutes.productByCatgoryRoute;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(categoryName, style: AppTextStyle.kTextStyleSemiBold22),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => SearchScreen()),
+              );
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 11),
+            padding: const EdgeInsets.symmetric(horizontal: 11),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 BlocProvider(
                   create: (context) => GetProductsByCategoryCubit(
                     getProductsByCategoryUseCase: GetProductsByCategoryUseCase(
@@ -46,7 +62,9 @@ class ProductsByCategoryScreen extends StatelessWidget {
                       >(
                         builder: (context, state) {
                           if (state is GetProductsByCategoryLoading) {
-                            return Center(child: CircularProgressIndicator());
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
                           } else if (state is GetProductsByCategoryFailure) {
                             return Center(child: Text(state.errorMessage));
                           } else if (state is GetProductsByCategorySuccess) {
@@ -55,28 +73,48 @@ class ProductsByCategoryScreen extends StatelessWidget {
                             return GridView.builder(
                               itemCount: product.length,
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 35,
                                     mainAxisSpacing: 16.75,
                                     childAspectRatio: 0.69,
                                   ),
                               itemBuilder: (context, index) {
-                                return ItemCard(
-                                  image: product[index].thumbnail,
-                                  productName: product[index].title,
-                                  rate: product[index].rating,
-                                  productAfterOffer: product[index].price,
-                                  productBeforeOffer:
-                                      product[index].discountPercentage,
+                                final currentProduct = product[index];
+
+                                return BlocBuilder<
+                                  FavoriteCubit,
+                                  FavoriteStates
+                                >(
+                                  builder: (context, favState) {
+                                    final favoriteCubit = context
+                                        .read<FavoriteCubit>();
+                                    final isFav = favoriteCubit.isFavorite(
+                                      currentProduct.id,
+                                    );
+
+                                    return ItemCard(
+                                      image: currentProduct.thumbnail,
+                                      productName: currentProduct.title,
+                                      rate: currentProduct.rating,
+                                      productAfterOffer: currentProduct.price,
+                                      productBeforeOffer:
+                                          currentProduct.discountPercentage,
+                                      isFavorite: isFav,
+                                      onFavoriteTap: () => _handleFavoriteTap(
+                                        context,
+                                        currentProduct.id,
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                             );
                           } else {
-                            return Center(
-                              child: Text("Something Wrong out of data"),
+                            return const Center(
+                              child: Text("Something went wrong loading data"),
                             );
                           }
                         },
@@ -88,5 +126,28 @@ class ProductsByCategoryScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleFavoriteTap(BuildContext context, int productId) async {
+    final cubit = context.read<FavoriteCubit>();
+    final wasFavorite = cubit.isFavorite(productId);
+    final result = await cubit.toggleFavorite(productId);
+
+    if (!context.mounted) return;
+
+    switch (result) {
+      case Success<String>():
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              wasFavorite ? "Removed from favourites" : "Added to favourites",
+            ),
+          ),
+        );
+      case Error<String>(messageError: final message):
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }

@@ -80,7 +80,6 @@ class CartCubit extends Cubit<CartState> {
         emit(UpdateQuantitySuccess(_currentCart!, quantities: _quantities));
 
       case Error<String>():
-
         _quantities[productId] = oldQuantity;
         emit(UpdateQuantityFailure(result.messageError));
     }
@@ -90,7 +89,6 @@ class CartCubit extends Cubit<CartState> {
     if (!_quantities.containsKey(productId)) return;
 
     final currentQuantity = _quantities[productId]!;
-
 
     if (currentQuantity == 1) {
       await deleteCart(productId.toString());

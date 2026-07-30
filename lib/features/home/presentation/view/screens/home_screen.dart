@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nti_graduation_project/core/di/service_locator.dart';
 import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
@@ -20,55 +19,34 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   static const routeName = AppRoutes.homeRoute;
+
   @override
   Widget build(BuildContext context) {
-    final List<String> categories = [
-      'Miscellaneous',
-      'Shoes',
-      'Furniture',
-      'Electronics',
-      'ptengan',
-      'Mesaq3a',
-    ];
-    return BlocProvider<FavoriteCubit>(
-      create: (_) => serviceLocator<FavoriteCubit>()..getFavorite(),
-      child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 11),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Text(
-                      "Hi!",
-                      style: AppTextStyle.kTextStyleSemiBold16,
-                    ),
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 11),
+            padding: const EdgeInsets.symmetric(horizontal: 11),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Text("Hi!", style: AppTextStyle.kTextStyleSemiBold16),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Text(
                     "Let's start your day",
                     style: AppTextStyle.kTextStyleSemiBold16,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Text(
-                      "Let's start your day",
-                      style: AppTextStyle.kTextStyleSemiBold16,
+                ),
+                const SizedBox(height: 10),
+
+                SizedBox(
+                  height: 40,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: BlocProvider(
                       create: (context) => GetCategoryCubit(
                         GetCategoriesUseCase(HomeRepoImp(HomeDataSourceImp())),
@@ -77,7 +55,9 @@ class HomeScreen extends StatelessWidget {
                         builder: (context, state) {
                           if (state is GetCategoryLoading ||
                               state is GetCategoryInitial) {
-                            return Center(child: CircularProgressIndicator());
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
                           } else if (state is GetCategoryFailure) {
                             return Center(child: Text(state.errorMessage));
                           } else if (state is GetCategorySuccess) {
@@ -110,119 +90,82 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 40,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          return CategoryCart(title: categories[index]);
-                        },
-                      ),
+                ),
+                const SizedBox(height: 20),
+
+                BlocProvider(
+                  create: (context) => GetAllProductCubit(
+                    getAllProductUseCase: GetAllProductUseCase(
+                      HomeRepoImp(HomeDataSourceImp()),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  BlocProvider(
-                    create: (context) => GetAllProductCubit(
-                      getAllProductUseCase: GetAllProductUseCase(
-                        HomeRepoImp(HomeDataSourceImp()),
-                      ),
-                    )..getAllProduct(),
-                    child: BlocBuilder<GetAllProductCubit, GetAllProductState>(
-                      builder: (context, state) {
-                        if (state is GetAllProductLoading) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is GetAllProductFailure) {
-                          return Center(child: Text(state.errorMessage));
-                        } else if (state is GetAllProductSuccess) {
-                          final product = state.list;
+                  )..getAllProduct(),
+                  child: BlocBuilder<GetAllProductCubit, GetAllProductState>(
+                    builder: (context, state) {
+                      if (state is GetAllProductLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is GetAllProductFailure) {
+                        return Center(child: Text(state.errorMessage));
+                      } else if (state is GetAllProductSuccess) {
+                        final product = state.list;
 
                         return GridView.builder(
                           itemCount: product.length,
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 35,
                                 mainAxisSpacing: 16.75,
                                 childAspectRatio: 0.69,
                               ),
                           itemBuilder: (context, index) {
-                            return ItemCard(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  AppRoutes.productdetailsRoute,
-                                  arguments: product[index],
+                            final currentProduct = product[index];
+
+                            return BlocBuilder<FavoriteCubit, FavoriteStates>(
+                              builder: (context, favState) {
+                                final favoriteCubit = context
+                                    .read<FavoriteCubit>();
+                                final isFav = favoriteCubit.isFavorite(
+                                  currentProduct.id,
+                                );
+
+                                return ItemCard(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      AppRoutes.productdetailsRoute,
+                                      arguments: currentProduct,
+                                    );
+                                  },
+                                  image: currentProduct.thumbnail,
+                                  productName: currentProduct.title,
+                                  rate: currentProduct.rating,
+                                  productAfterOffer:
+                                      ((currentProduct.discountPercentage /
+                                                  100) *
+                                              currentProduct.price)
+                                          .ceilToDouble(),
+                                  productBeforeOffer: currentProduct.price
+                                      .ceilToDouble(),
+                                  isFavorite: isFav,
+                                  onFavoriteTap: () => _handleFavoriteTap(
+                                    context,
+                                    currentProduct.id,
+                                  ),
                                 );
                               },
-                              image: product[index].thumbnail,
-                              productName: product[index].title,
-                              rate: product[index].rating,
-                              productAfterOffer: (((product[index].discountPercentage)/100)*product[index].price).ceilToDouble(),
-                              productBeforeOffer: product[index].price.ceilToDouble(),
                             );
                           },
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(
+                          child: Text("Something Went Wrong loading data"),
+                        );
                       }
                     },
                   ),
                 ),
               ],
-                          return GridView.builder(
-                            itemCount: product.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 35,
-                              mainAxisSpacing: 16.75,
-                              childAspectRatio: 0.69,
-                            ),
-                            itemBuilder: (context, index) {
-                              final currentProduct = product[index];
-
-                              return BlocBuilder<FavoriteCubit, FavoriteStates>(
-                                builder: (context, favState) {
-                                  final favoriteCubit =
-                                      context.read<FavoriteCubit>();
-                                  final isFav = favoriteCubit.isFavorite(
-                                    currentProduct.id,
-                                  );
-
-                                  return ItemCard(
-                                    image: currentProduct.thumbnail,
-                                    productName: currentProduct.title,
-                                    rate: currentProduct.rating,
-                                    productAfterOffer: currentProduct.price,
-                                    productBeforOffer:
-                                        currentProduct.discountPercentage,
-                                    isFavorite: isFav,
-                                    onFavoriteTap: () => _handleFavoriteTap(
-                                      context,
-                                      currentProduct.id,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        } else {
-                          return Center(
-                            child: Text("Something Wrong out of data"),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ),

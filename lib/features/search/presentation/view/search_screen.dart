@@ -79,7 +79,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
         },
         builder: (context, state) {
           if (state is SearchLoading) {
-            return  Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
 
           if (state is SearchSuccess) {
@@ -103,15 +103,16 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
         controller: searchController,
         focusNode: focusNode,
         hintText: 'Search for your products',
-        prefixIcon:  Icon(Icons.search, color: Colors.grey),
+        prefixIcon: Icon(Icons.search, color: Colors.grey),
         suffixWidget: searchController.text.isNotEmpty
             ? IconButton(
-            onPressed: () {
-              searchController.clear();
-              context.read<SearchCubit>().clearSearch();
-              setState(() {});
-            },
-            icon:Icon(Icons.close, color: Colors.grey, size: 20))
+                onPressed: () {
+                  searchController.clear();
+                  context.read<SearchCubit>().clearSearch();
+                  setState(() {});
+                },
+                icon: Icon(Icons.close, color: Colors.grey, size: 20),
+              )
             : null,
         onChanged: (value) {
           setState(() {});
@@ -181,9 +182,8 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
       itemBuilder: (context, index) {
         final product = products[index];
         return ItemCard(
-          image: product.thumbnail.isNotEmpty
-              ? product.thumbnail
-              : 'https://via.placeholder.com/150',
+          image: product.thumbnail,
+
           productName: product.title,
           rate: product.rating,
           productAfterOffer:
@@ -195,6 +195,3 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
     );
   }
 }
-
-
-

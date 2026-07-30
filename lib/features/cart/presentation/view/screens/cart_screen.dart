@@ -5,7 +5,6 @@ import '../../view_model/cart_state.dart';
 import '../widgets/cart_with_items.dart';
 import '../widgets/empty_cart_screen.dart';
 
-
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -27,37 +26,49 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Cart"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("My Cart"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(17),
         child: BlocConsumer<CartCubit, CartState>(
           listener: (context, state) {
             if (state is DeleteCartSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.green),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green,
+                ),
               );
             }
             if (state is AddCartSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.green),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green,
+                ),
               );
             }
             if (state is DeleteCartFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
             if (state is AddCartFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
             if (state is UpdateQuantityFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
             if (state is OutOfStockError) {
@@ -103,9 +114,12 @@ class _CartScreenState extends State<CartScreen> {
             }
 
             if (state is OutOfStockError) {
-              final products = state.cart.productList ;
+              final products = state.cart.productList;
               if (products.isEmpty) return const EmptyCartScreen();
-              return CartWithItems(products: products,quantities: state.quantities,);
+              return CartWithItems(
+                products: products,
+                quantities: state.quantities,
+              );
             }
 
             if (state is GetCartFailure) {
@@ -131,11 +145,5 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ),
     );
-class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
-  static const routeName = AppRoutes.cartRoute;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("Cart Screen")));
   }
 }
