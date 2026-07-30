@@ -194,6 +194,37 @@ class HomeScreen extends StatelessWidget {
                         } else if (state is GetAllProductSuccess) {
                           final product = state.list;
 
+                        return GridView.builder(
+                          itemCount: product.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 35,
+                                mainAxisSpacing: 16.75,
+                                childAspectRatio: 0.69,
+                              ),
+                          itemBuilder: (context, index) {
+                            return ItemCard(
+                              image: product[index].thumbnail,
+                              productName: product[index].title,
+                              rate: product[index].rating,
+                              productAfterOffer: product[index].price,
+                              productBeforeOffer:
+                                  product[index].discountPercentage,
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: Text("Something Wrong out of data"),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
                           return GridView.builder(
                             itemCount: product.length,
                             shrinkWrap: true,

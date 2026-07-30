@@ -12,6 +12,7 @@ class ItemCard extends StatelessWidget {
     required this.productBeforOffer,
      this.isFavorite=false,
      this.onFavoriteTap,
+    required this.productBeforeOffer,
   });
 
   final String image;
@@ -21,6 +22,10 @@ class ItemCard extends StatelessWidget {
   final double productBeforOffer;
   final bool isFavorite;
   final VoidCallback? onFavoriteTap;
+  final double productBeforeOffer;
+  @override
+  State<ItemCard> createState() => _ItemCardState();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +63,35 @@ class ItemCard extends StatelessWidget {
                         ),
                       );
                     },
+                      mainAxisAlignment: .end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isFavourite = !isFavourite;
+                            });
+                          },
+                          icon: isFavourite
+                              ? Icon(Icons.favorite, color: Colors.red)
+                              : Icon(Icons.favorite_border),
+                        ),
+                      ],
+                    ),
+                  Expanded(
+                    child: Image.network(
+                      widget.image,
+                      fit: .contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[200],
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                            size: 40,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -68,17 +102,28 @@ class ItemCard extends StatelessWidget {
             children: [
               Text(productName, style: AppTextStyle.kTextStyleRegular14),
               Text("⭐$rate", style: AppTextStyle.kTextStyleRegular14),
+              Expanded(
+                child: Text(
+                  widget.productName,
+                  style: AppTextStyle.kTextStyleRegular14,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
           Row(
             children: [
               Text(
                 "EG $productAfterOffer",
+                "EGP ${widget.productAfterOffer}",
                 style: AppTextStyle.kTextStyleRegular14,
               ),
               const SizedBox(width: 5),
               Text(
                 "EG $productBeforOffer",
+                "EGP ${widget.productBeforeOffer}",
                 style: AppTextStyle.kTextStyleDiscount,
               ),
             ],

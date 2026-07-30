@@ -4,6 +4,7 @@ abstract class ApiConstant {
   static const String allProductEndPoint =
       '$baseUrl/home/products?skip=0&limit=10';
   static const String register = '$baseUrl/auth/signUp';
+  static const String login = '$baseUrl/auth/signIn';
     
 static const String addToFavourite="/user/addFavorite";
 static const String getFavourite="/user/getFavorite";

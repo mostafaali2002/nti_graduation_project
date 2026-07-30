@@ -10,8 +10,8 @@ import 'package:nti_graduation_project/features/favourite/presentation/view_mode
 
 import '../../../../../core/routes/app_routes.dart';
 
-class Favourite extends StatelessWidget {
-  const Favourite({super.key});
+class FavouriteScreen extends StatelessWidget {
+  const FavouriteScreen({super.key});
   static const routeName = AppRoutes.favRoute;
 
   @override
