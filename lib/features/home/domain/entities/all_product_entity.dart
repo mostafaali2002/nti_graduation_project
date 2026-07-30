@@ -27,10 +27,9 @@ class ProductListEntity {
     this.rating = 0.0,
     this.availabilityStatus = '',
     this.images = const [],
+    this.reviews = const [],
     this.thumbnail = "",
     this.stock = 0,
-  });
-    this.reviews = const [],
   });
 }
 

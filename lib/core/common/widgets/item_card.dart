@@ -9,30 +9,25 @@ class ItemCard extends StatelessWidget {
     required this.productName,
     required this.rate,
     required this.productAfterOffer,
-    required this.productBeforOffer,
-     this.isFavorite=false,
-     this.onFavoriteTap,
     required this.productBeforeOffer,
     this.onTap,
+    this.isFavorite = false,
+    this.onFavoriteTap,
   });
 
   final String image;
   final String productName;
   final double rate;
   final double productAfterOffer;
-  final double productBeforOffer;
+  final double productBeforeOffer;
+  final VoidCallback? onTap;
   final bool isFavorite;
   final VoidCallback? onFavoriteTap;
-  final double productBeforeOffer;
-  final void Function()? onTap;
-  @override
-  State<ItemCard> createState() => _ItemCardState();
-}
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 5,
@@ -54,37 +49,10 @@ class ItemCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Image.network(
-                    image,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.broken_image,
-                          color: Colors.grey,
-                          size: 40,
-                        ),
-                      );
-                    },
-                      mainAxisAlignment: .end,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isFavourite = !isFavourite;
-                            });
-                          },
-                          icon: isFavourite
-                              ? Icon(Icons.favorite, color: Colors.red)
-                              : Icon(Icons.favorite_border),
-                        ),
-                      ],
-                    ),
                   Expanded(
                     child: Image.network(
-                      widget.image,
-                      fit: .contain,
+                      image,
+                      fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: Colors.grey[200],
@@ -102,32 +70,27 @@ class ItemCard extends StatelessWidget {
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(productName, style: AppTextStyle.kTextStyleRegular14),
-              Text("⭐$rate", style: AppTextStyle.kTextStyleRegular14),
               Expanded(
                 child: Text(
-                  widget.productName,
+                  productName,
                   style: AppTextStyle.kTextStyleRegular14,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
+              Text("⭐$rate", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
           Row(
             children: [
               Text(
-                "EG $productAfterOffer",
-                "EGP ${widget.productAfterOffer}",
+                "EGP $productAfterOffer",
                 style: AppTextStyle.kTextStyleRegular14,
               ),
               const SizedBox(width: 5),
               Text(
-                "EG $productBeforOffer",
-                "EGP ${widget.productBeforeOffer}",
+                "EGP $productBeforeOffer",
                 style: AppTextStyle.kTextStyleDiscount,
               ),
             ],
