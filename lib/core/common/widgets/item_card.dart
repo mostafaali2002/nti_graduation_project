@@ -9,13 +9,15 @@ class ItemCard extends StatefulWidget {
     required this.productName,
     required this.rate,
     required this.productAfterOffer,
-    required this.productBeforeOffer,
+    required this.productBeforOffer,
+    this.onTap,
   });
   final String image;
   final String productName;
   final double rate;
   final double productAfterOffer;
-  final double productBeforeOffer;
+  final double productBeforOffer;
+  final void Function()? onTap;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
@@ -25,6 +27,7 @@ class _ItemCardState extends State<ItemCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: widget.onTap,
       child: Column(
         crossAxisAlignment: .start,
         spacing: 5,

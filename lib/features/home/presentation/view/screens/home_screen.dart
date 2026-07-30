@@ -113,6 +113,12 @@ class HomeScreen extends StatelessWidget {
                               ),
                           itemBuilder: (context, index) {
                             return ItemCard(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  AppRoutes.productdetailsRoute,
+                                  arguments: product[index],
+                                );
+                              },
                               image: product[index].thumbnail,
                               productName: product[index].title,
                               rate: product[index].rating,
