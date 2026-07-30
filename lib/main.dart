@@ -5,25 +5,22 @@ import 'package:nti_graduation_project/core/di/service_locator.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/storage_helper/secure_storage_helper.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
-import 'package:nti_graduation_project/core/utils/bloc/my_bloc_observer.dart';
-import 'package:nti_graduation_project/core/utils/helper/dio_helper.dart';
-import 'package:nti_graduation_project/core/utils/my_bloc_observer.dart';
-import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
-// import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
-import 'package:nti_graduation_project/features/auth/presentation/view/screen/login_screen.dart';
-import 'package:nti_graduation_project/features/auth/presentation/view/screen/register_screen.dart';
-import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart';
-import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/home/presentation/view/screens/home_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
-import 'package:nti_graduation_project/features/product_details/presentation/screen/product_details_screen.dart';
+import 'package:nti_graduation_project/features/search/presentation/view/search_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'core/utils/helper/dio_helper.dart';
+import 'features/app_section/view/screens/bottom_navigator_ui.dart';
 
 
 void main() async {
   configureDependencies();
   WidgetsFlutterBinding.ensureInitialized();
+
+  DioHelper.init();
+
   Bloc.observer = MyBlocObserver();
   String? token = await serviceLocator<SecureStorageHelper>().getSecure(
     key: AppKeys.token,

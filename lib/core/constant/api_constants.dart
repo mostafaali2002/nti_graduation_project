@@ -6,6 +6,7 @@ abstract class ApiConstant {
   static const String getCartEndPoint = '$baseUrl/user/getCart';
   static const String addCartEndPoint = '$baseUrl/user/addCart';
   static const String deleteCartEndPoint = '$baseUrl/user/deleteCart';
+  static const String searchEndPoint = '$baseUrl/home/productsFilter';
   static const String register = '$baseUrl/auth/signUp';
   static const String login = '$baseUrl/auth/signIn';
     

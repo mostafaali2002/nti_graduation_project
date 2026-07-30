@@ -5,6 +5,10 @@ import 'package:nti_graduation_project/features/home/domain/entities/category_en
 abstract interface class HomeDataSourceInterface {
   Future<ResultApi<CategoryEntity>> getCategories();
   Future<ResultApi<AllProductEntity>> getAllProducts();
+  Future<ResultApi<AllProductEntity>> searchProducts({
+    required String query,
+    int skip = 0,
+    int limit = 10,
   Future<ResultApi<AllProductEntity>> getProductsByCategory({
     required String slug,
     int skip = 0,

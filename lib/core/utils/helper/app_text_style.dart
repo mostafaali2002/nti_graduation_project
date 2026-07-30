@@ -22,11 +22,11 @@ abstract class AppTextStyle {
     color: Colors.black,
   );
   static const TextStyle kTextStyleDiscount = TextStyle(
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     color: Color(0xFFFFB700),
     decoration: TextDecoration.lineThrough,
-    decorationThickness: 1,
+    decorationThickness: 1.1,
     decorationColor: Color(0xFFFFB700),
   );
 
