@@ -169,9 +169,7 @@ class HomeScreen extends StatelessWidget {
                           },
                         );
                       } else {
-                        return Center(
-                          child: Text("Something Wrong out of data"),
-                        );
+                        return Center(child: CircularProgressIndicator());
                       }
                     },
                   ),

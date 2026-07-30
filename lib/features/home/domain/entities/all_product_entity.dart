@@ -29,6 +29,7 @@ class ProductListEntity {
     this.images = const [],
     this.thumbnail = "",
     this.stock = 0,
+  });
     this.reviews = const [],
   });
 }
