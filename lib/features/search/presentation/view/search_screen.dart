@@ -182,6 +182,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
       itemBuilder: (context, index) {
         final product = products[index];
         return ItemCard(
+          productId: product.id,
           image: product.thumbnail,
 
           productName: product.title,
