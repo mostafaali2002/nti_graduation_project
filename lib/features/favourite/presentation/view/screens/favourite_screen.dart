@@ -89,6 +89,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   children: [
                     Expanded(
                       child: ItemCard(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            AppRoutes.productdetailsRoute,
+                            arguments: product,
+                          );
+                        },
                         image: product.thumbnail,
                         productName: product.title,
                         rate: product.rating,
