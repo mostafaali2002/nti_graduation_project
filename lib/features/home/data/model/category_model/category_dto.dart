@@ -1,3 +1,5 @@
+import 'package:nti_graduation_project/features/home/domain/entities/category_entity.dart';
+
 class CategoryDto {
   List<CategoryList>? categoryList;
 
@@ -11,6 +13,11 @@ class CategoryDto {
       });
     }
   }
+  CategoryEntity toEntity() {
+    return CategoryEntity(
+      categoryList: categoryList?.map((e) => e.toEntity()).toList() ?? [],
+    );
+  }
 }
 
 class CategoryList {
@@ -18,11 +25,18 @@ class CategoryList {
   String? image;
   String? slug;
 
-  CategoryList({this.name, this.image});
+  CategoryList({this.name, this.image, this.slug});
 
   CategoryList.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     image = json['image'];
     slug = json['slug'];
+  }
+  CategoryListEntity toEntity() {
+    return CategoryListEntity(
+      name: name ?? '',
+      image: image ?? '',
+      slug: slug ?? '',
+    );
   }
 }

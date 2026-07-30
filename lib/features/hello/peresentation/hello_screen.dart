@@ -22,14 +22,18 @@ class HelloScreen extends StatelessWidget {
 
             CustomButton(
               text: "signUp",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.signupRoute);
+              },
               backgroundColor: AppColorStyle.lightButtonColor,
               textColor: AppColorStyle.whiteColor,
               borderColor: Colors.transparent,
             ),
             CustomButton(
               text: "Login ",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.loginRoute);
+              },
               backgroundColor: AppColorStyle.whiteColor,
               textColor: AppColorStyle.lightButtonColor,
               borderColor: AppColorStyle.lightButtonColor,

@@ -9,5 +9,9 @@ abstract interface class HomeDataSourceInterface {
     required String query,
     int skip = 0,
     int limit = 10,
+  Future<ResultApi<AllProductEntity>> getProductsByCategory({
+    required String slug,
+    int skip = 0,
+    int limit = 5,
   });
 }
