@@ -37,6 +37,7 @@ class ShoppingApp extends StatelessWidget {
   const ShoppingApp({super.key, required this.initialRoute, this.token});
   final String initialRoute;
   final String? token;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,7 +53,6 @@ class ShoppingApp extends StatelessWidget {
           create: (context) => serviceLocator<LoginCubit>(),
           child: LoginScreen(),
         ),
-
         AppRoutes.signupRoute: (_) => BlocProvider(
           create: (_) => serviceLocator<RegisterCubit>(),
           child: const RegisterScreen(),
