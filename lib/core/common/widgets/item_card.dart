@@ -13,6 +13,7 @@ class ItemCard extends StatelessWidget {
      this.isFavorite=false,
      this.onFavoriteTap,
     required this.productBeforeOffer,
+    this.onTap,
   });
 
   final String image;
@@ -23,6 +24,7 @@ class ItemCard extends StatelessWidget {
   final bool isFavorite;
   final VoidCallback? onFavoriteTap;
   final double productBeforeOffer;
+  final void Function()? onTap;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
@@ -30,6 +32,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: widget.onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 5,

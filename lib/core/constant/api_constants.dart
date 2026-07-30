@@ -14,4 +14,6 @@ static const String deleteFavourite="/user/deleteFavorite";
 
 
 
+  static String productsByCategoryEndPoint(String slug) =>
+      '$baseUrl/home/products/category/$slug';
 }

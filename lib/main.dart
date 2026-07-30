@@ -16,6 +16,7 @@ import 'package:nti_graduation_project/features/auth/presentation/view_model/log
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
+import 'package:nti_graduation_project/features/product_details/presentation/screen/product_details_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -40,6 +41,7 @@ class ShoppingApp extends StatelessWidget {
   const ShoppingApp({super.key, required this.initialRoute, this.token});
   final String initialRoute;
   final String? token;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,11 +57,11 @@ class ShoppingApp extends StatelessWidget {
           create: (context) => serviceLocator<LoginCubit>(),
           child: LoginScreen(),
         ),
-
         AppRoutes.signupRoute: (_) => BlocProvider(
           create: (_) => serviceLocator<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
+        AppRoutes.productdetailsRoute: (_) => const ProductDetailsScreen(),
       },
     );
   }

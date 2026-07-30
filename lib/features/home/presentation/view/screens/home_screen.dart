@@ -8,7 +8,10 @@ import 'package:nti_graduation_project/features/favourite/presentation/view_mode
 import 'package:nti_graduation_project/features/home/data/repo/home_data_source_imp.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_repo_imp.dart';
 import 'package:nti_graduation_project/features/home/domain/use_case/get_all_product_use_case.dart';
+import 'package:nti_graduation_project/features/home/domain/use_case/get_item_use_case.dart';
 import 'package:nti_graduation_project/features/home/presentation/view_model/get_all_product/get_all_product_cubit.dart';
+import 'package:nti_graduation_project/features/home/presentation/view_model/get_category_cubit/get_category_cubit.dart';
+import 'package:nti_graduation_project/features/products_by_category/presentation/view/screen/products_by_category_screen.dart';
 import '../../../../../core/common/widgets/item_card.dart';
 import '../../../../../core/routes/app_routes.dart';
 import '../../../../app_section/view/widgets/category_cart.dart';
@@ -43,12 +46,68 @@ class HomeScreen extends StatelessWidget {
                       "Hi!",
                       style: AppTextStyle.kTextStyleSemiBold16,
                     ),
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 11),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Text("Hi!", style: AppTextStyle.kTextStyleSemiBold16),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(
+                    "Let's start your day",
+                    style: AppTextStyle.kTextStyleSemiBold16,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     child: Text(
                       "Let's start your day",
                       style: AppTextStyle.kTextStyleSemiBold16,
+                    child: BlocProvider(
+                      create: (context) => GetCategoryCubit(
+                        GetCategoriesUseCase(HomeRepoImp(HomeDataSourceImp())),
+                      )..getcatgories(),
+                      child: BlocBuilder<GetCategoryCubit, GetCategoryState>(
+                        builder: (context, state) {
+                          if (state is GetCategoryLoading ||
+                              state is GetCategoryInitial) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (state is GetCategoryFailure) {
+                            return Center(child: Text(state.errorMessage));
+                          } else if (state is GetCategorySuccess) {
+                            final categories = state.categories;
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categories.length,
+                              itemBuilder: (context, index) {
+                                final category = categories[index];
+                                return CategoryCart(
+                                  title: category.name,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            ProductsByCategoryScreen(
+                                              slug: category.slug,
+                                              categoryName: category.name,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -94,6 +153,12 @@ class HomeScreen extends StatelessWidget {
                               ),
                           itemBuilder: (context, index) {
                             return ItemCard(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  AppRoutes.productdetailsRoute,
+                                  arguments: product[index],
+                                );
+                              },
                               image: product[index].thumbnail,
                               productName: product[index].title,
                               rate: product[index].rating,

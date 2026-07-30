@@ -12,8 +12,17 @@ class HomeRepoImp implements HomeRepoInterface {
       _homeDataSourceInterface.getAllProducts();
 
   @override
-  Future<ResultApi<CategoryEntity>> getCategories() {
-    // TODO: implement getCategories
-    throw UnimplementedError();
-  }
+  Future<ResultApi<CategoryEntity>> getCategories() =>
+      _homeDataSourceInterface.getCategories();
+
+  @override
+  Future<ResultApi<AllProductEntity>> getProductsByCategory({
+    required String slug,
+    int skip = 0,
+    int limit = 5,
+  }) => _homeDataSourceInterface.getProductsByCategory(
+    slug: slug,
+    skip: skip,
+    limit: limit,
+  );
 }

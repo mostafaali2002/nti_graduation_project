@@ -9,4 +9,6 @@ abstract class AppRoutes {
   static const String onBoarding = '/onBoarding';
   static const String bottomNavUI = '/bottomNavUI';
 
+  static const String productByCatgoryRoute = '/ productByCatgory';
+  static const String productdetailsRoute = '/productdetails';
 }
