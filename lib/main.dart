@@ -6,7 +6,10 @@ import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/storage_helper/secure_storage_helper.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
 import 'package:nti_graduation_project/core/utils/bloc/my_bloc_observer.dart';
+import 'package:nti_graduation_project/core/utils/helper/dio_helper.dart';
+import 'package:nti_graduation_project/core/utils/my_bloc_observer.dart';
 import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
+// import 'package:nti_graduation_project/features/app_section/view/screens/bottom_navigator-ui.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/login_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/register_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart';
@@ -23,6 +26,7 @@ void main() async {
   String? token = await serviceLocator<SecureStorageHelper>().getSecure(
     key: AppKeys.token,
   );
+  DioHelper.init();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isOnBoardingDone = prefs.getBool("onBoardingDone") ?? false;
 

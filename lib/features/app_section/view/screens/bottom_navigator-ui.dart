@@ -27,6 +27,7 @@ class BottomNavUI extends StatelessWidget {
                 FavouriteScreen(),
                 AccountScreen(),
               ],
+              children: [HomeScreen(), Cart(), Favourite(), Account()],
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: .fixed,

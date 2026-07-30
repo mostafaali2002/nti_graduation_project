@@ -29,6 +29,22 @@ import 'package:nti_graduation_project/features/auth/presentation/view_model/log
     as _i137;
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart'
     as _i788;
+import 'package:nti_graduation_project/features/favourite/data/repo/favourite_data_source_imp.dart'
+    as _i171;
+import 'package:nti_graduation_project/features/favourite/data/repo/favourite_repo_imp.dart'
+    as _i163;
+import 'package:nti_graduation_project/features/favourite/domain/repo/favourite_data_source_interface.dart'
+    as _i658;
+import 'package:nti_graduation_project/features/favourite/domain/repo/favourite_repo_interface.dart'
+    as _i303;
+import 'package:nti_graduation_project/features/favourite/domain/use_case/add_favorite_use_case.dart'
+    as _i595;
+import 'package:nti_graduation_project/features/favourite/domain/use_case/delete_favorite_use_case.dart'
+    as _i704;
+import 'package:nti_graduation_project/features/favourite/domain/use_case/get_favorite_use_case.dart'
+    as _i819;
+import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart'
+    as _i1034;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -50,14 +66,40 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i9.LoginUseCase>(
       () => _i9.LoginUseCase(gh<_i48.AuthRepoInterface>()),
     );
+    gh.factory<_i658.FavoriteDataSourceInterface>(
+      () => _i171.FavoriteDataSourceImp(),
+    );
     gh.factory<_i103.RegisterUseCase>(
       () => _i103.RegisterUseCase(gh<_i48.AuthRepoInterface>()),
+    );
+    gh.factory<_i303.FavoriteRepoInterface>(
+      () => _i163.FavoriteRepoImp(
+        favoriteDataSource: gh<_i658.FavoriteDataSourceInterface>(),
+      ),
     );
     gh.factory<_i788.RegisterCubit>(
       () => _i788.RegisterCubit(gh<_i103.RegisterUseCase>()),
     );
     gh.factory<_i137.LoginCubit>(
       () => _i137.LoginCubit(gh<_i9.LoginUseCase>()),
+    );
+    gh.factory<_i595.AddFavoriteUseCase>(
+      () => _i595.AddFavoriteUseCase(gh<_i303.FavoriteRepoInterface>()),
+    );
+    gh.factory<_i819.GetFavoriteUseCase>(
+      () => _i819.GetFavoriteUseCase(gh<_i303.FavoriteRepoInterface>()),
+    );
+    gh.factory<_i704.DeleteFavoriteUseCase>(
+      () => _i704.DeleteFavoriteUseCase(
+        favoriteRepo: gh<_i303.FavoriteRepoInterface>(),
+      ),
+    );
+    gh.factory<_i1034.FavoriteCubit>(
+      () => _i1034.FavoriteCubit(
+        gh<_i819.GetFavoriteUseCase>(),
+        gh<_i595.AddFavoriteUseCase>(),
+        gh<_i704.DeleteFavoriteUseCase>(),
+      ),
     );
     return this;
   }

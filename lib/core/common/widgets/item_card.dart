@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import '../../utils/helper/app_color_style.dart';
 
-class ItemCard extends StatefulWidget {
+class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
     required this.image,
@@ -10,26 +10,31 @@ class ItemCard extends StatefulWidget {
     required this.rate,
     required this.productAfterOffer,
     required this.productBeforOffer,
+     this.isFavorite=false,
+     this.onFavoriteTap,
+    required this.productBeforeOffer,
     this.onTap,
   });
+
   final String image;
   final String productName;
   final double rate;
   final double productAfterOffer;
   final double productBeforOffer;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteTap;
+  final double productBeforeOffer;
   final void Function()? onTap;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
 
-class _ItemCardState extends State<ItemCard> {
-  bool isFavourite = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 5,
         children: [
           Expanded(
@@ -38,6 +43,29 @@ class _ItemCardState extends State<ItemCard> {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: onFavoriteTap,
+                        icon: isFavorite
+                            ? const Icon(Icons.favorite, color: Colors.red)
+                            : const Icon(Icons.favorite_border),
+                      ),
+                    ],
+                  ),
+                  Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.broken_image,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
+                      );
+                    },
                       mainAxisAlignment: .end,
                       children: [
                         IconButton(
@@ -73,7 +101,10 @@ class _ItemCardState extends State<ItemCard> {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Text(productName, style: AppTextStyle.kTextStyleRegular14),
+              Text("⭐$rate", style: AppTextStyle.kTextStyleRegular14),
               Expanded(
                 child: Text(
                   widget.productName,
@@ -85,15 +116,16 @@ class _ItemCardState extends State<ItemCard> {
               Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
-
           Row(
             children: [
               Text(
+                "EG $productAfterOffer",
                 "EGP ${widget.productAfterOffer}",
                 style: AppTextStyle.kTextStyleRegular14,
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Text(
+                "EG $productBeforOffer",
                 "EGP ${widget.productBeforeOffer}",
                 style: AppTextStyle.kTextStyleDiscount,
               ),

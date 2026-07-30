@@ -1,6 +1,5 @@
 class AllProductEntity {
   List<ProductListEntity> productList;
-
   AllProductEntity({this.productList = const []});
 }
 
@@ -15,6 +14,7 @@ class ProductListEntity {
   String availabilityStatus;
   List<String> images;
   String thumbnail;
+  int stock;
   List<ReviewEntity> reviews;
 
   ProductListEntity({
@@ -28,6 +28,7 @@ class ProductListEntity {
     this.availabilityStatus = '',
     this.images = const [],
     this.thumbnail = "",
+    this.stock = 0,
     this.reviews = const [],
   });
 }

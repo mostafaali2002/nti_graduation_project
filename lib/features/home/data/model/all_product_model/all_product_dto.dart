@@ -1,4 +1,4 @@
-import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
+import '../../../domain/entities/all_product_entity.dart';
 
 class AllProductDto {
   List<ProductListDto>? productList;
@@ -33,6 +33,7 @@ class ProductListDto {
   String? availabilityStatus;
   List<String>? images;
   String? thumbnail;
+  int? stock;
   List<ReviewDto>? reviews;
 
   ProductListDto({
@@ -47,6 +48,7 @@ class ProductListDto {
     this.availabilityStatus,
     this.images,
     this.thumbnail,
+    this.stock,
     this.reviews,
   });
 
@@ -58,10 +60,11 @@ class ProductListDto {
     price = json['price'];
     discountPercentage = json['discountPercentage'];
     rating = json['rating'];
-    tags = json['tags'].cast<String>();
+    tags = json['tags']?.cast<String>();
     availabilityStatus = json['availabilityStatus'];
     images = List<String>.from(json['images'] ?? []);
     thumbnail = json['thumbnail'];
+    stock = json['stock'] ?? 0;
     reviews = (json['reviews'] as List? ?? [])
         .map((v) => ReviewDto.fromJson(v))
         .toList();
@@ -79,6 +82,7 @@ class ProductListDto {
       availabilityStatus: availabilityStatus ?? '',
       images: images ?? [],
       thumbnail: thumbnail ?? '',
+      stock: stock ?? 0,
       reviews: reviews?.map((e) => e.toEntity()).toList() ?? [],
     );
   }
