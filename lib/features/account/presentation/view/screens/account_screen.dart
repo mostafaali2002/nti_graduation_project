@@ -1,15 +1,4 @@
-import 'package:flutter/cupertino.dart';
-
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-/*import 'dart:convert';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -305,4 +294,4 @@ class _AccountScreenState extends State<AccountScreen> {
       },
     );
   }
-}*/
+}

@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 import '../../../../core/common/widgets/item_card.dart';
-import '../../../cart/data/repo/cart_data_source_implement.dart';
-import '../../../cart/data/repo/cart_repo_implement.dart';
-import '../../../cart/domain/use_case/add_cart_use_case.dart';
-import '../../../cart/domain/use_case/delete_cart_use_case.dart';
-import '../../../cart/domain/use_case/get_cart_use_case.dart';
-import '../../../cart/presentation/view_model/cart_cubit.dart';
 import '../../../home/data/repo/home_data_source_imp.dart';
-import '../../../product_details/presentation/screen/product_details_screen.dart';
 import '../../data/repo/search_repo_impl.dart';
 import '../../domain/repo/search_repo_interface.dart';
 import '../../domain/use_case/search_use_case.dart';
@@ -29,31 +23,9 @@ class SearchScreen extends StatelessWidget {
     final searchUseCase = SearchProductsUseCase(searchRepo: searchRepo);
     final searchCubit = SearchCubit(searchProductsUseCase: searchUseCase);
 
-    final cartCubit = _createCartCubit();
-
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => searchCubit),
-        BlocProvider(create: (context) => cartCubit),
-      ],
-      child: const SearchScreenContent(),
-    );
-  }
-
-
-  CartCubit _createCartCubit() {
-    final cartDataSource = CartDataSourceImp();
-    final cartRepo = CartRepoImp(
-      cartDataSource: cartDataSource,
-    );
-    final getCartUseCase = GetCartUseCase(cartRepo: cartRepo);
-    final addCartUseCase = AddCartUseCase(cartRepo: cartRepo);
-    final deleteCartUseCase = DeleteCartUseCase(cartRepo: cartRepo);
-
-    return CartCubit(
-      getCartUseCase: getCartUseCase,
-      addCartUseCase: addCartUseCase,
-      deleteCartUseCase: deleteCartUseCase,
+    return BlocProvider(
+      create: (context) => searchCubit,
+      child: SearchScreenContent(),
     );
   }
 }
@@ -88,7 +60,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const SearchBarWidget(),
+        title: buildSearchBar(),
         centerTitle: false,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -108,36 +80,43 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
         },
         builder: (context, state) {
           if (state is SearchLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
 
           if (state is SearchSuccess) {
-            return SearchResultsWidget(products: state.products);
+            return buildSearchResults(state.products);
           }
 
           if (state is SearchEmpty) {
-            return const SearchEmptyWidget();
+            return buildEmptyState();
           }
 
-          return const SearchInitialWidget();
+          return buildInitialState();
         },
       ),
     );
   }
-}
 
-
-class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildSearchBar() {
     return SizedBox(
       height: 50,
       child: CustomTextFormField(
+        controller: searchController,
+        focusNode: focusNode,
         hintText: 'Search for your products',
-        prefixIcon: const Icon(Icons.search, color: Colors.grey),
+        prefixIcon: Icon(Icons.search, color: Colors.grey),
+        suffixWidget: searchController.text.isNotEmpty
+            ? IconButton(
+                onPressed: () {
+                  searchController.clear();
+                  context.read<SearchCubit>().clearSearch();
+                  setState(() {});
+                },
+                icon: Icon(Icons.close, color: Colors.grey, size: 20),
+              )
+            : null,
         onChanged: (value) {
+          setState(() {});
           if (value != null && value.isNotEmpty) {
             context.read<SearchCubit>().searchProducts(value);
           } else if (value?.isEmpty ?? true) {
@@ -148,13 +127,8 @@ class SearchBarWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class SearchInitialWidget extends StatelessWidget {
-  const SearchInitialWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildInitialState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,14 +148,8 @@ class SearchInitialWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-
-class SearchEmptyWidget extends StatelessWidget {
-  const SearchEmptyWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildEmptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -201,16 +169,8 @@ class SearchEmptyWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-
-class SearchResultsWidget extends StatelessWidget {
-  final List<ProductListEntity> products;
-
-  const SearchResultsWidget({super.key, required this.products});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildSearchResults(List<ProductListEntity> products) {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -222,31 +182,21 @@ class SearchResultsWidget extends StatelessWidget {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-
-        final priceAfterDiscount = (product.price * (1 - product.discountPercentage / 100));
-
         return ItemCard(
+          productId: product.id,
           onTap: () {
-            final cartCubit = context.read<CartCubit>();
-
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: cartCubit,
-                  child: const ProductDetailsScreen(),
-                ),
-                settings: RouteSettings(
-                  arguments: product,
-                ),
-              ),
-            );
+            Navigator.of(
+              context,
+            ).pushNamed(AppRoutes.productdetailsRoute, arguments: product);
           },
           image: product.thumbnail,
+
           productName: product.title,
           rate: product.rating,
-          productAfterOffer: priceAfterDiscount.ceilToDouble(),
+          productAfterOffer:
+              (((product.discountPercentage) / 100) * product.price)
+                  .ceilToDouble(),
           productBeforeOffer: product.price.ceilToDouble(),
-          productId: product.id,
         );
       },
     );

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/constant/app_keys.dart';
@@ -6,6 +5,9 @@ import 'package:nti_graduation_project/core/di/service_locator.dart';
 import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/core/storage_helper/secure_storage_helper.dart';
 import 'package:nti_graduation_project/core/theme/theme_app.dart';
+import 'package:nti_graduation_project/features/account/presentation/view/screens/account_screen.dart';
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart';
+import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_cubit.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/login_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/register_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart';
@@ -49,8 +51,17 @@ class ShoppingApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<FavoriteCubit>(
-          create: (context) => serviceLocator<FavoriteCubit>(),
+          
+          create: (context) {
+            final cubit = serviceLocator<FavoriteCubit>();
+            if (token != null) {
+              cubit.getFavorite();
+            }
+            return cubit;
+          },
         ),
+        BlocProvider(create: (context) => serviceLocator<AccountCubit>()),
+        BlocProvider(create: (context) => serviceLocator<GetAccountCubit>()),
       ],
       child: MaterialApp(
         theme: ThemeApp.lightTheme,
@@ -60,6 +71,9 @@ class ShoppingApp extends StatelessWidget {
         routes: {
           AppRoutes.onBoarding: (_) => const OnbordingScreen(),
           AppRoutes.helloRoute: (_) => const HelloScreen(),
+
+          AppRoutes.accountRoute: (_) => const AccountScreen(),
+
           AppRoutes.homeRoute: (_) => const BottomNavUI(),
           AppRoutes.loginRoute: (_) => BlocProvider(
             create: (context) => serviceLocator<LoginCubit>(),

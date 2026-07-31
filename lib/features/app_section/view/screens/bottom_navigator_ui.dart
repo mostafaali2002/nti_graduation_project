@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/features/account/presentation/view/screens/account_screen.dart';
 import 'package:nti_graduation_project/core/constant/app_assets.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/app_section_cubit.dart';
-import 'package:nti_graduation_project/features/favourite/presentation/view/screens/favourite_screen.dart';
-import 'package:nti_graduation_project/features/home/presentation/view/screens/home_screen.dart';
-import 'package:nti_graduation_project/features/app_section/view_model/app_section_states.dart';
+import 'package:nti_graduation_project/features/cart/data/repo/cart_data_source_implement.dart';
+import 'package:nti_graduation_project/features/cart/data/repo/cart_repo_implement.dart';
 import 'package:nti_graduation_project/features/cart/domain/repo/cart_data_source_interface.dart';
 import 'package:nti_graduation_project/features/cart/domain/repo/cart_repo_interface.dart';
-import '../../../cart/data/repo/cart_data_source_implement.dart';
-import '../../../cart/data/repo/cart_repo_implement.dart';
-import '../../../cart/domain/use_case/add_cart_use_case.dart';
-import '../../../cart/domain/use_case/delete_cart_use_case.dart';
-import '../../../cart/domain/use_case/get_cart_use_case.dart';
-import '../../../cart/presentation/view/screens/cart_screen.dart';
-import '../../../cart/presentation/view_model/cart_cubit.dart';
+import 'package:nti_graduation_project/features/cart/domain/use_case/add_cart_use_case.dart';
+import 'package:nti_graduation_project/features/cart/domain/use_case/delete_cart_use_case.dart';
+import 'package:nti_graduation_project/features/cart/domain/use_case/get_cart_use_case.dart';
+import 'package:nti_graduation_project/features/cart/presentation/view/screens/cart_screen.dart';
+import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_cubit.dart';
+import 'package:nti_graduation_project/features/favourite/presentation/view/screens/favourite_screen.dart';
+import 'package:nti_graduation_project/features/app_section/view_model/app_section_states.dart';
+import 'package:nti_graduation_project/features/home/presentation/view/screens/home_screen.dart';
 import '../widgets/nav_icon.dart';
 
 class BottomNavUI extends StatelessWidget {
@@ -22,11 +22,8 @@ class BottomNavUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AppSectionCubit()),
-        BlocProvider(create: (context) => createCartCubit()),
-      ],
+    return BlocProvider(
+      create: (context) => AppSectionCubit(),
       child: BlocBuilder<AppSectionCubit, AppSectionState>(
         builder: (context, state) {
           final cubit = context.read<AppSectionCubit>();
@@ -34,9 +31,13 @@ class BottomNavUI extends StatelessWidget {
           return Scaffold(
             body: IndexedStack(
               index: cubit.currentIndex,
-              children: const [
+              children: [
                 HomeScreen(),
-                CartScreen(),
+                BlocProvider(
+                  create: (context) => createCartCubit(),
+                  child: CartScreen(),
+                ),
+
                 FavouriteScreen(),
                 AccountScreen(),
               ],
@@ -88,9 +89,11 @@ class BottomNavUI extends StatelessWidget {
 
   CartCubit createCartCubit() {
     final CartDataSourceInterface cartDataSource = CartDataSourceImp();
+
     final CartRepoInterface cartRepo = CartRepoImp(
       cartDataSource: cartDataSource,
     );
+
     final getCartUseCase = GetCartUseCase(cartRepo: cartRepo);
     final addCartUseCase = AddCartUseCase(cartRepo: cartRepo);
     final deleteCartUseCase = DeleteCartUseCase(cartRepo: cartRepo);

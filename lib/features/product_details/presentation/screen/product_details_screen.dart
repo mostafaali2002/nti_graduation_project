@@ -1,15 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
+import 'package:nti_graduation_project/core/common/widgets/custom_favorite.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
-import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_cubit.dart';
-import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_state.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
-import '../../../cart/domain/entities/cart_entity.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -21,18 +17,13 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isFavourite = false;
-  int currentImageIndex = 0;
-  bool isAdding = false;
 
-  bool isProductInCart(ProductListEntity product, CartEntity? cart) {
-    if (cart == null) return false;
-    return cart.productList.any((p) => p.id == product.id);
-  }
+  int currentImageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final product =
-    ModalRoute.of(context)!.settings.arguments as ProductListEntity;
+        ModalRoute.of(context)!.settings.arguments as ProductListEntity;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -68,58 +59,49 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
                 itemBuilder:
                     (BuildContext context, int itemIndex, int pageViewIndex) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      color: AppColorStyle.whiteColor,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          color: AppColorStyle.whiteColor,
+                        ),
+                        child: Column(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColorStyle.whiteColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                "${product.discountPercentage}% OFF",
-                                style: AppTextStyle.kTextStyleRegular14
-                                    .copyWith(
-                                  color: AppColorStyle.lightButtonColor,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColorStyle.whiteColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    "${product.discountPercentage}% OFF",
+                                    style: AppTextStyle.kTextStyleRegular14
+                                        .copyWith(
+                                          color: AppColorStyle.lightButtonColor,
+                                        ),
+                                  ),
                                 ),
-                              ),
+                                FavoriteIconButton(
+                                  productId: product.id,
+                                  size: 28,
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isFavourite = !isFavourite;
-                                });
-                              },
-                              icon: isFavourite
-                                  ? const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              )
-                                  : const Icon(Icons.favorite_border),
+                            Expanded(
+                              child: Image.network(
+                                product.images[itemIndex],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ],
                         ),
-                        Expanded(
-                          child: Image.network(
-                            product.images[itemIndex],
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
               ),
             ),
             const SizedBox(height: 12),
@@ -132,7 +114,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   dotHeight: 10,
                   dotWidth: 10,
                   spacing: 4,
-                  dotColor: AppColorStyle.lightButtonColor,
+                  dotColor: AppColorStyle.unselectedSmoothPageIndicatorColorTow,
                   activeDotColor: AppColorStyle.secondaryButtonColor,
                 ),
               ),
@@ -161,12 +143,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             Row(
               children: [
                 Text(
-                  "EGP ${(product.price * (1 - product.discountPercentage / 100)).floorToDouble()}",
+                  "EGP ${((product.price) - (product.price * product.discountPercentage / 100)).toStringAsFixed(2)}",
                   style: AppTextStyle.kTextStyleRegular16,
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  "EGP ${product.price.ceilToDouble()}",
+                  "EGP ${product.price}",
                   style: AppTextStyle.kTextStyleDiscount.copyWith(
                     fontSize: AppTextStyle.kTextStyleRegular16.fontSize,
                   ),
@@ -224,81 +206,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: BlocConsumer<CartCubit, CartState>(
-          listener: (context, state) {
-            if (state is AddCartSuccess) {
-              setState(() {
-                isAdding = false;
-              });
-              context.read<CartCubit>().showSnackBar(context);
-              Future.delayed(const Duration(milliseconds: 300), () {
-                if (mounted) {
-                  Navigator.pop(context);
-                }
-              });
-            }
-            if (state is DeleteCartSuccess) {
-              setState(() {
-                isAdding = false;
-              });
-              context.read<CartCubit>().showSnackBar(context);
-              Future.delayed(const Duration(milliseconds: 300), () {
-                if (mounted) {
-                  Navigator.pop(context);
-                }
-              });
-            }
-            if (state is AddCartFailure) {
-              setState(() {
-                isAdding = false;
-              });
-            }
-            if (state is DeleteCartFailure) {
-              setState(() {
-                isAdding = false;
-              });
-            }
-          },
-          builder: (context, state) {
-            final isLoading = state is AddCartLoading && isAdding;
-
-            final cart = context.read<CartCubit>().currentCart;
-            final isInCart = isProductInCart(product, cart);
-
-            if (isInCart) {
-              return CustomButton(
-                text: 'Already in cart',
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                borderColor: Colors.grey,
-                onPressed: null,
-              );
-            }
-
-            return CustomButton(
-              text: isLoading ? 'Adding...' : 'Add to cart',
-              backgroundColor: isLoading
-                  ? Colors.grey
-                  : AppColorStyle.secondaryButtonColor,
-              textColor: isLoading
-                  ? Colors.white
-                  : AppColorStyle.bottomNavigationBarBackgroundColor,
-              borderColor: isLoading
-                  ? Colors.grey
-                  : AppColorStyle.secondaryButtonColor,
-              onPressed: isLoading
-                  ? null
-                  : () {
-                setState(() {
-                  isAdding = true;
-                });
-                context.read<CartCubit>().toggleCart(
-                  product.id,
-                  productName: product.title,
-                );
-              },
-            );
-          },
+        child: CustomButton(
+          text: 'Add to cart',
+          backgroundColor: AppColorStyle.secondaryButtonColor,
+          textColor: AppColorStyle.bottomNavigationBarBackgroundColor,
+          borderColor: AppColorStyle.secondaryButtonColor,
         ),
       ),
     );

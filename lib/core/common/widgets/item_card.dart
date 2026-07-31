@@ -1,30 +1,31 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:nti_graduation_project/core/common/widgets/custom_favorite.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import '../../utils/helper/app_color_style.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
+    required this.productId,
     required this.image,
     required this.productName,
     required this.rate,
     required this.productAfterOffer,
     required this.productBeforeOffer,
     this.onTap,
-    this.isFavorite = false,
-    this.onFavoriteTap,
-    this.productId=0,
+    this.onFavoriteToggle,
   });
 
+  final int productId;
   final String image;
   final String productName;
   final double rate;
   final double productAfterOffer;
   final double productBeforeOffer;
-  final int productId;
   final VoidCallback? onTap;
-  final bool isFavorite;
-  final VoidCallback? onFavoriteTap;
+  final VoidCallback? onFavoriteToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +44,9 @@ class ItemCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(
-                        onPressed: onFavoriteTap,
-                        icon: isFavorite
-                            ? const Icon(Icons.favorite, color: Colors.red)
-                            : const Icon(Icons.favorite_border),
+                      FavoriteIconButton(
+                        productId: productId,
+                        onFavoriteToggle: onFavoriteToggle,
                       ),
                     ],
                   ),
