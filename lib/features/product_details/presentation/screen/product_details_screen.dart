@@ -122,7 +122,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   dotHeight: 10,
                   dotWidth: 10,
                   spacing: 4,
-                  dotColor: AppColorStyle.lightButtonColor,
+                  dotColor: AppColorStyle.unselectedSmoothPageIndicatorColorTow,
                   activeDotColor: AppColorStyle.secondaryButtonColor,
                 ),
               ),

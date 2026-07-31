@@ -96,6 +96,12 @@ class ProductsByCategoryScreen extends StatelessWidget {
                                     );
 
                                     return ItemCard(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                          AppRoutes.productdetailsRoute,
+                                          arguments: currentProduct,
+                                        );
+                                      },
                                       image: currentProduct.thumbnail,
                                       productName: currentProduct.title,
                                       rate: currentProduct.rating,
