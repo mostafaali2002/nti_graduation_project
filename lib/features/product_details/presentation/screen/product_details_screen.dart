@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_favorite.dart';
@@ -5,7 +6,6 @@ import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -114,7 +114,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   dotHeight: 10,
                   dotWidth: 10,
                   spacing: 4,
-                  dotColor: AppColorStyle.lightButtonColor,
+                  dotColor: AppColorStyle.unselectedSmoothPageIndicatorColorTow,
                   activeDotColor: AppColorStyle.secondaryButtonColor,
                 ),
               ),

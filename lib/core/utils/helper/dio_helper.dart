@@ -12,11 +12,11 @@ class DioHelper {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
-          headers: {
-            "Authorization": "Bearer ${DioHelper.token}",
-            "Content-Type": "application/json",
-            'Accept': 'application/json',
-          },
+        headers: {
+          "Authorization": "Bearer ${DioHelper.token}",
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+        },
       ),
     );
   }

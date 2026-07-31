@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti_graduation_project/core/routes/app_routes.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 import '../../../../core/common/widgets/item_card.dart';
 import '../../../home/data/repo/home_data_source_imp.dart';
@@ -183,6 +184,11 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
         final product = products[index];
         return ItemCard(
           productId: product.id,
+          onTap: () {
+            Navigator.of(
+              context,
+            ).pushNamed(AppRoutes.productdetailsRoute, arguments: product);
+          },
           image: product.thumbnail,
 
           productName: product.title,

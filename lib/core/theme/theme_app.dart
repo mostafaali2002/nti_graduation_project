@@ -25,6 +25,8 @@ abstract class ThemeApp {
         color: AppColorStyle.whiteColor,
       ),
     ),
+    unselectedWidgetColor: AppColorStyle.unselectedSmoothPageIndicatorColorTow,
+    primaryColor: AppColorStyle.primaryButtonColor,
     dividerColor: AppColorStyle.greyColor,
     splashColor: AppColorStyle.scaffoldBackgroundColor,
     highlightColor: AppColorStyle.unselectedSmoothPageIndicatorColor,

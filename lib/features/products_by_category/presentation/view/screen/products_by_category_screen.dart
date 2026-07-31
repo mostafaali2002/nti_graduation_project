@@ -89,6 +89,37 @@ class ProductsByCategoryScreen extends StatelessWidget {
                                   productAfterOffer: currentProduct.price,
                                   productBeforeOffer:
                                       currentProduct.discountPercentage,
+                                return BlocBuilder<
+                                  FavoriteCubit,
+                                  FavoriteStates
+                                >(
+                                  builder: (context, favState) {
+                                    final favoriteCubit = context
+                                        .read<FavoriteCubit>();
+                                    final isFav = favoriteCubit.isFavorite(
+                                      currentProduct.id,
+                                    );
+
+                                    return ItemCard(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                          AppRoutes.productdetailsRoute,
+                                          arguments: currentProduct,
+                                        );
+                                      },
+                                      image: currentProduct.thumbnail,
+                                      productName: currentProduct.title,
+                                      rate: currentProduct.rating,
+                                      productAfterOffer: currentProduct.price,
+                                      productBeforeOffer:
+                                          currentProduct.discountPercentage,
+                                      isFavorite: isFav,
+                                      onFavoriteTap: () => _handleFavoriteTap(
+                                        context,
+                                        currentProduct.id,
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                             );
