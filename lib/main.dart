@@ -53,6 +53,8 @@ class ShoppingApp extends StatelessWidget {
         BlocProvider<FavoriteCubit>(
           create: (context) => serviceLocator<FavoriteCubit>(),
         ),
+        BlocProvider(create: (context) => serviceLocator<AccountCubit>()),
+        BlocProvider(create: (context) => serviceLocator<GetAccountCubit>()),
       ],
       child: MaterialApp(
         theme: ThemeApp.lightTheme,
@@ -62,15 +64,9 @@ class ShoppingApp extends StatelessWidget {
         routes: {
           AppRoutes.onBoarding: (_) => const OnbordingScreen(),
           AppRoutes.helloRoute: (_) => const HelloScreen(),
-          AppRoutes.accountRoute: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => serviceLocator<AccountCubit>()),
-              BlocProvider(
-                create: (context) => serviceLocator<GetAccountCubit>(),
-              ),
-            ],
-            child: const AccountScreen(),
-          ),
+
+          AppRoutes.accountRoute: (_) => const AccountScreen(),
+
           AppRoutes.homeRoute: (_) => const BottomNavUI(),
           AppRoutes.loginRoute: (_) => BlocProvider(
             create: (context) => serviceLocator<LoginCubit>(),
