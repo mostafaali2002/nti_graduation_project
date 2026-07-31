@@ -51,7 +51,14 @@ class ShoppingApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<FavoriteCubit>(
-          create: (context) => serviceLocator<FavoriteCubit>(),
+          
+          create: (context) {
+            final cubit = serviceLocator<FavoriteCubit>();
+            if (token != null) {
+              cubit.getFavorite();
+            }
+            return cubit;
+          },
         ),
         BlocProvider(create: (context) => serviceLocator<AccountCubit>()),
         BlocProvider(create: (context) => serviceLocator<GetAccountCubit>()),

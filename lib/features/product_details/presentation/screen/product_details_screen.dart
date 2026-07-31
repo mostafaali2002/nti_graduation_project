@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
+import 'package:nti_graduation_project/core/common/widgets/custom_favorite.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
@@ -85,18 +86,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ),
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isFavourite = !isFavourite;
-                                    });
-                                  },
-                                  icon: isFavourite
-                                      ? const Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                        )
-                                      : const Icon(Icons.favorite_border),
+                                FavoriteIconButton(
+                                  productId: product.id,
+                                  size: 28,
                                 ),
                               ],
                             ),

@@ -147,11 +147,10 @@ class HomeScreen extends StatelessWidget {
                                           .ceilToDouble(),
                                   productBeforeOffer: currentProduct.price
                                       .ceilToDouble(),
-                                  isFavorite: isFav,
-                                  onFavoriteTap: () => _handleFavoriteTap(
-                                    context,
-                                    currentProduct.id,
-                                  ),
+                                  onFavoriteToggle: () {
+                                    context.read<FavoriteCubit>().getFavorite();
+                                  },
+                                  productId: currentProduct.id,
                                 );
                               },
                             );
