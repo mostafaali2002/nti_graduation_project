@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
 import '../../utils/helper/app_color_style.dart';
 
-class ItemCard extends StatefulWidget {
+class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
     required this.image,
@@ -10,49 +10,49 @@ class ItemCard extends StatefulWidget {
     required this.rate,
     required this.productAfterOffer,
     required this.productBeforeOffer,
+    this.onTap,
+    this.isFavorite = false,
+    this.onFavoriteTap,
   });
+
   final String image;
   final String productName;
   final double rate;
   final double productAfterOffer;
   final double productBeforeOffer;
-  @override
-  State<ItemCard> createState() => _ItemCardState();
-}
+  final VoidCallback? onTap;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteTap;
 
-class _ItemCardState extends State<ItemCard> {
-  bool isFavourite = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onTap,
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 5,
         children: [
           Expanded(
+            flex: 3,
             child: Container(
               color: AppColorStyle.whiteColor,
               child: Column(
                 children: [
                   Row(
-                      mainAxisAlignment: .end,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isFavourite = !isFavourite;
-                            });
-                          },
-                          icon: isFavourite
-                              ? Icon(Icons.favorite, color: Colors.red)
-                              : Icon(Icons.favorite_border),
-                        ),
-                      ],
-                    ),
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: onFavoriteTap,
+                        icon: isFavorite
+                            ? const Icon(Icons.favorite, color: Colors.red)
+                            : const Icon(Icons.favorite_border),
+                      ),
+                    ],
+                  ),
                   Expanded(
                     child: Image.network(
-                      widget.image,
-                      fit: .contain,
+                      image,
+                      fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: Colors.grey[200],
@@ -73,25 +73,24 @@ class _ItemCardState extends State<ItemCard> {
             children: [
               Expanded(
                 child: Text(
-                  widget.productName,
+                  productName,
                   style: AppTextStyle.kTextStyleRegular14,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Text("⭐${widget.rate}", style: AppTextStyle.kTextStyleRegular14),
+              Text("⭐$rate", style: AppTextStyle.kTextStyleRegular14),
             ],
           ),
-
           Row(
             children: [
               Text(
-                "EGP ${widget.productAfterOffer}",
+                "EGP $productAfterOffer",
                 style: AppTextStyle.kTextStyleRegular14,
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Text(
-                "EGP ${widget.productBeforeOffer}",
+                "EGP $productBeforeOffer",
                 style: AppTextStyle.kTextStyleDiscount,
               ),
             ],

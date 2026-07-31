@@ -1,4 +1,4 @@
-import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
+import '../../../domain/entities/all_product_entity.dart';
 
 class AllProductDto {
   List<ProductListDto>? productList;
@@ -13,6 +13,7 @@ class AllProductDto {
       });
     }
   }
+
   AllProductEntity toEntity() {
     return AllProductEntity(
       productList: productList?.map((e) => e.toEntity()).toList() ?? [],
@@ -32,6 +33,8 @@ class ProductListDto {
   String? availabilityStatus;
   List<String>? images;
   String? thumbnail;
+  int? stock;
+  List<ReviewDto>? reviews;
 
   ProductListDto({
     this.id,
@@ -45,6 +48,8 @@ class ProductListDto {
     this.availabilityStatus,
     this.images,
     this.thumbnail,
+    this.stock,
+    this.reviews,
   });
 
   ProductListDto.fromJson(Map<String, dynamic> json) {
@@ -55,10 +60,16 @@ class ProductListDto {
     price = json['price'];
     discountPercentage = json['discountPercentage'];
     rating = json['rating'];
-    tags = json['tags'].cast<String>();
+    tags = json['tags']?.cast<String>();
     availabilityStatus = json['availabilityStatus'];
+    images = List<String>.from(json['images'] ?? []);
     thumbnail = json['thumbnail'];
+    stock = json['stock'] ?? 0;
+    reviews = (json['reviews'] as List? ?? [])
+        .map((v) => ReviewDto.fromJson(v))
+        .toList();
   }
+
   ProductListEntity toEntity() {
     return ProductListEntity(
       id: id ?? 0,
@@ -71,6 +82,42 @@ class ProductListDto {
       availabilityStatus: availabilityStatus ?? '',
       images: images ?? [],
       thumbnail: thumbnail ?? '',
+      stock: stock ?? 0,
+      reviews: reviews?.map((e) => e.toEntity()).toList() ?? [],
+    );
+  }
+}
+
+class ReviewDto {
+  int? rating;
+  String? comment;
+  String? date;
+  String? reviewerName;
+  String? reviewerEmail;
+
+  ReviewDto({
+    this.rating,
+    this.comment,
+    this.date,
+    this.reviewerName,
+    this.reviewerEmail,
+  });
+
+  ReviewDto.fromJson(Map<String, dynamic> json) {
+    rating = json['rating'];
+    comment = json['comment'];
+    date = json['date'];
+    reviewerName = json['reviewerName'];
+    reviewerEmail = json['reviewerEmail'];
+  }
+
+  ReviewEntity toEntity() {
+    return ReviewEntity(
+      rating: rating ?? 0,
+      comment: comment ?? '',
+      date: date ?? '',
+      reviewerName: reviewerName ?? '',
+      reviewerEmail: reviewerEmail ?? '',
     );
   }
 }
