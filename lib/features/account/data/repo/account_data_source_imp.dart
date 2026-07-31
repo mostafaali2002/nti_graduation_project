@@ -16,8 +16,6 @@ class AccountDataSourceImp implements AccountDataSourceInterface {
   @override
   Future<ResultApi<GetProfileEntity>> getAccountInfo() async {
     try {
-      DioHelper.init();
-
       final response = await DioHelper.dio.get(
         ApiConstant.accountEndPointGet,
         options: Options(
@@ -45,7 +43,6 @@ class AccountDataSourceImp implements AccountDataSourceInterface {
       address: profileEntity.address,
     );
     try {
-      DioHelper.init();
       final response = await DioHelper.dio.post(
         data: messageDto.toJson(),
         ApiConstant.accountEndPointPost,
