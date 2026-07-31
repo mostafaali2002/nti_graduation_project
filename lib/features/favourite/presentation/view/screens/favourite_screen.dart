@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/common/widgets/item_card.dart';
 import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
+import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_cubit.dart';
+import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_state.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view/widgets/add_to_cart_custom_button.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_states.dart';
@@ -18,6 +20,8 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
+  Set<int> addingProducts = {};
+
   @override
   void initState() {
     super.initState();
@@ -73,42 +77,111 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               );
             }
 
-            return GridView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: products.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 35,
-                mainAxisSpacing: 16.75,
-                childAspectRatio: 0.58,
-              ),
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: ItemCard(
-                        image: product.thumbnail,
-                        productName: product.title,
-                        rate: product.rating,
-                        productAfterOffer:
-                            ((product.discountPercentage / 100) * product.price)
-                                .ceilToDouble(),
-                        productBeforeOffer: product.price.ceilToDouble(),
-                        isFavorite: true,
-                        onFavoriteTap: () => _handleToggle(context, product.id),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    SizedBox(
-                      height: 40,
-                      width: 120,
-                      child: AddToCartCustomButton(),
-                    ),
-                  ],
-                );
+            return BlocListener<CartCubit, CartState>(
+              listener: (context, cartState) {
+                if (cartState is AddCartSuccess) {
+                  setState(() {
+                    addingProducts.clear();
+                  });
+                  context.read<CartCubit>().showSnackBar(context);
+                }
+                if (cartState is DeleteCartSuccess) {
+                  setState(() {
+                    addingProducts.clear();
+                  });
+                  context.read<CartCubit>().showSnackBar(context);
+                }
+                if (cartState is AddCartFailure) {
+                  setState(() {
+                    addingProducts.clear();
+                  });
+                }
+                if (cartState is DeleteCartFailure) {
+                  setState(() {
+                    addingProducts.clear();
+                  });
+                }
               },
+              child: GridView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: products.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 35,
+                  mainAxisSpacing: 16.75,
+                  childAspectRatio: 0.58,
+                ),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  final isAdding = addingProducts.contains(product.id);
+
+                  final cart = context.watch<CartCubit>().currentCart;
+                  final isInCart = cart?.productList.any((p) => p.id == product.id) ?? false;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: ItemCard(
+                          image: product.thumbnail,
+                          productName: product.title,
+                          rate: product.rating,
+                          productAfterOffer:
+                          (product.price * (1 - product.discountPercentage / 100)).floorToDouble(),
+                          productBeforeOffer: product.price.ceilToDouble(),
+                          isFavorite: true,
+                          onFavoriteTap: () => _handleToggle(context, product.id),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 40,
+                        width: 120,
+                        child: Builder(
+                          builder: (context) {
+                            if (isInCart && !isAdding) {
+                              return ElevatedButton(
+                                onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(120, 40),
+                                  backgroundColor: Colors.grey,
+                                  elevation: 0,
+                                  padding: EdgeInsets.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  "In cart",
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return AddToCartCustomButton(
+                              onPressed: isAdding
+                                  ? null
+                                  : () {
+                                setState(() {
+                                  addingProducts.add(product.id);
+                                });
+                                context.read<CartCubit>().toggleCart(
+                                  product.id,
+                                  productName: product.title,
+                                );
+                              },
+                              isLoading: isAdding,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             );
           }
           return const SizedBox.shrink();
@@ -137,7 +210,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
-        switch (result) {}
     }
   }
 }

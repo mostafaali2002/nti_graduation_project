@@ -13,6 +13,7 @@ class ItemCard extends StatelessWidget {
     this.onTap,
     this.isFavorite = false,
     this.onFavoriteTap,
+    this.productId=0,
   });
 
   final String image;
@@ -20,6 +21,7 @@ class ItemCard extends StatelessWidget {
   final double rate;
   final double productAfterOffer;
   final double productBeforeOffer;
+  final int productId;
   final VoidCallback? onTap;
   final bool isFavorite;
   final VoidCallback? onFavoriteTap;

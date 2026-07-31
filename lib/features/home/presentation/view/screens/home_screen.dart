@@ -14,6 +14,8 @@ import 'package:nti_graduation_project/features/products_by_category/presentatio
 import '../../../../../core/common/widgets/item_card.dart';
 import '../../../../../core/routes/app_routes.dart';
 import '../../../../app_section/view/widgets/category_cart.dart';
+import '../../../../cart/presentation/view_model/cart_cubit.dart';
+import '../../../../product_details/presentation/screen/product_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -113,12 +115,12 @@ class HomeScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 35,
-                                mainAxisSpacing: 16.75,
-                                childAspectRatio: 0.69,
-                              ),
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 35,
+                            mainAxisSpacing: 16.75,
+                            childAspectRatio: 0.69,
+                          ),
                           itemBuilder: (context, index) {
                             final currentProduct = product[index];
 
@@ -132,21 +134,26 @@ class HomeScreen extends StatelessWidget {
 
                                 return ItemCard(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                      AppRoutes.productdetailsRoute,
-                                      arguments: currentProduct,
+                                    final cartCubit = context.read<CartCubit>();
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => BlocProvider.value(
+                                          value: cartCubit,
+                                          child: const ProductDetailsScreen(),
+                                        ),
+                                        settings: RouteSettings(
+                                          arguments: currentProduct,
+                                        ),
+                                      ),
                                     );
                                   },
                                   image: currentProduct.thumbnail,
                                   productName: currentProduct.title,
                                   rate: currentProduct.rating,
                                   productAfterOffer:
-                                      ((currentProduct.discountPercentage /
-                                                  100) *
-                                              currentProduct.price)
-                                          .ceilToDouble(),
-                                  productBeforeOffer: currentProduct.price
-                                      .ceilToDouble(),
+                                  (currentProduct.price * (1 - currentProduct.discountPercentage / 100)).floorToDouble(),
+                                  productBeforeOffer: currentProduct.price.ceilToDouble(),
                                   isFavorite: isFav,
                                   onFavoriteTap: () => _handleFavoriteTap(
                                     context,
@@ -172,7 +179,6 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
   Future<void> _handleFavoriteTap(BuildContext context, int productId) async {
     final cubit = context.read<FavoriteCubit>();
     final wasFavorite = cubit.isFavorite(productId);

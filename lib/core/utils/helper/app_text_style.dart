@@ -26,7 +26,7 @@ abstract class AppTextStyle {
     fontWeight: FontWeight.w500,
     color: Color(0xFFFFB700),
     decoration: TextDecoration.lineThrough,
-    decorationThickness: 1.1,
+    decorationThickness: 1.5,
     decorationColor: Color(0xFFFFB700),
   );
 

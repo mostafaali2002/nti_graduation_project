@@ -22,8 +22,11 @@ class BottomNavUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AppSectionCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AppSectionCubit()),
+        BlocProvider(create: (context) => createCartCubit()),
+      ],
       child: BlocBuilder<AppSectionCubit, AppSectionState>(
         builder: (context, state) {
           final cubit = context.read<AppSectionCubit>();
@@ -31,13 +34,9 @@ class BottomNavUI extends StatelessWidget {
           return Scaffold(
             body: IndexedStack(
               index: cubit.currentIndex,
-              children: [
-                 HomeScreen(),
-                BlocProvider(
-                  create: (context) => createCartCubit(),
-                  child:  CartScreen(),
-                ),
-
+              children: const [
+                HomeScreen(),
+                CartScreen(),
                 FavouriteScreen(),
                 AccountScreen(),
               ],
@@ -89,11 +88,9 @@ class BottomNavUI extends StatelessWidget {
 
   CartCubit createCartCubit() {
     final CartDataSourceInterface cartDataSource = CartDataSourceImp();
-
     final CartRepoInterface cartRepo = CartRepoImp(
       cartDataSource: cartDataSource,
     );
-
     final getCartUseCase = GetCartUseCase(cartRepo: cartRepo);
     final addCartUseCase = AddCartUseCase(cartRepo: cartRepo);
     final deleteCartUseCase = DeleteCartUseCase(cartRepo: cartRepo);

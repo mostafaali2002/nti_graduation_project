@@ -92,7 +92,10 @@ class CartItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "EGP ${(product.price).toStringAsFixed(0)}",
+                        "EGP ${(product.price.ceilToDouble())-((product.discountPercentage /
+                            100)*
+                            product.price)
+                            .ceilToDouble()}",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
