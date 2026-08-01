@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti_graduation_project/core/common/widgets/item_card.dart';
@@ -7,8 +5,9 @@ import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view/widgets/add_to_cart_custom_button.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_states.dart';
-
 import '../../../../../core/routes/app_routes.dart';
+import '../../../../cart/presentation/view_model/cart_cubit.dart';
+import '../../../../product_details/presentation/screen/product_details_screen.dart';
 
 class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});
@@ -88,8 +87,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                 final product = products[index];
 
                 final double discountedPrice =
-                    (product.price * (1 - (product.discountPercentage / 100)))
-                        .ceilToDouble();
+                (product.price * (1 - (product.discountPercentage / 100)))
+                    .ceilToDouble();
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,9 +97,18 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       child: ItemCard(
                         productId: product.id,
                         onTap: () {
-                          Navigator.of(context).pushNamed(
-                            AppRoutes.productdetailsRoute,
-                            arguments: product,
+                          final cartCubit = context.read<CartCubit>();
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cartCubit,
+                                child: const ProductDetailsScreen(),
+                              ),
+                              settings: RouteSettings(
+                                arguments: product,
+                              ),
+                            ),
                           );
                         },
                         image: product.thumbnail,
@@ -108,29 +116,25 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         rate: product.rating,
                         productAfterOffer: discountedPrice,
                         productBeforeOffer: product.price.ceilToDouble(),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            AppRoutes.productdetailsRoute,
-                            arguments: product,
-                          );
-                        },
-                        onFavoriteToggle: () {
-                          context.read<FavoriteCubit>().getFavorite();
-                        },
                       ),
                     ),
                     const SizedBox(height: 8),
                     SizedBox(
                       height: 40,
                       width: double.infinity,
-                      child: AddToCartCustomButton(),
+                      child: AddToCartCustomButton(
+                        productId: product.id,
+                        productName: product.title,
+                        width: double.infinity,
+                        height: 40,
+                        showLabel: true,
+                      ),
                     ),
                   ],
                 );
               },
             );
           }
-
           return const Center(child: CircularProgressIndicator());
         },
       ),

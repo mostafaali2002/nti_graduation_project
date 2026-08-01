@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
+import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
+import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_states.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_data_source_imp.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_repo_imp.dart';
 import 'package:nti_graduation_project/features/home/domain/use_case/get_products_by_category_use_case.dart';
@@ -8,6 +11,8 @@ import 'package:nti_graduation_project/features/products_by_category/presentatio
 import 'package:nti_graduation_project/features/search/presentation/view/search_screen.dart';
 import '../../../../../core/common/widgets/item_card.dart';
 import '../../../../../core/routes/app_routes.dart';
+import '../../../../cart/presentation/view_model/cart_cubit.dart';
+import '../../../../product_details/presentation/screen/product_details_screen.dart';
 
 class ProductsByCategoryScreen extends StatelessWidget {
   const ProductsByCategoryScreen({
@@ -31,7 +36,7 @@ class ProductsByCategoryScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const SearchScreen()),
+                MaterialPageRoute(builder: (_) => SearchScreen()),
               );
             },
             icon: const Icon(Icons.search),
@@ -53,83 +58,85 @@ class ProductsByCategoryScreen extends StatelessWidget {
                     ),
                   )..getProductsByCategory(slug: slug),
                   child:
-                      BlocBuilder<
-                        GetProductsByCategoryCubit,
-                        GetProductsByCategoryState
-                      >(
-                        builder: (context, state) {
-                          if (state is GetProductsByCategoryLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (state is GetProductsByCategoryFailure) {
-                            return Center(child: Text(state.errorMessage));
-                          } else if (state is GetProductsByCategorySuccess) {
-                            final product = state.list;
+                  BlocBuilder<
+                      GetProductsByCategoryCubit,
+                      GetProductsByCategoryState
+                  >(
+                    builder: (context, state) {
+                      if (state is GetProductsByCategoryLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is GetProductsByCategoryFailure) {
+                        return Center(child: Text(state.errorMessage));
+                      } else if (state is GetProductsByCategorySuccess) {
+                        final product = state.list;
 
-                            return GridView.builder(
-                              itemCount: product.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 35,
-                                    mainAxisSpacing: 16.75,
-                                    childAspectRatio: 0.69,
-                                  ),
-                              itemBuilder: (context, index) {
-                                final currentProduct = product[index];
+                        return GridView.builder(
+                          itemCount: product.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 35,
+                            mainAxisSpacing: 16.75,
+                            childAspectRatio: 0.69,
+                          ),
+                          itemBuilder: (context, index) {
+                            final currentProduct = product[index];
+
+                            return BlocBuilder<
+                                FavoriteCubit,
+                                FavoriteStates
+                            >(
+                              builder: (context, favState) {
+                                final favoriteCubit = context
+                                    .read<FavoriteCubit>();
+                                final isFav = favoriteCubit.isFavorite(
+                                  currentProduct.id,
+                                );
 
                                 return ItemCard(
-                                  productId: currentProduct.id,
+                                  onTap: () {
+                                    final cartCubit = context.read<CartCubit>();
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => BlocProvider.value(
+                                          value: cartCubit,
+                                          child: const ProductDetailsScreen(),
+                                        ),
+                                        settings: RouteSettings(
+                                          arguments: currentProduct,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   image: currentProduct.thumbnail,
                                   productName: currentProduct.title,
                                   rate: currentProduct.rating,
                                   productAfterOffer: currentProduct.price,
                                   productBeforeOffer:
-                                      currentProduct.discountPercentage,
-                                return BlocBuilder<
-                                  FavoriteCubit,
-                                  FavoriteStates
-                                >(
-                                  builder: (context, favState) {
-                                    final favoriteCubit = context
-                                        .read<FavoriteCubit>();
-                                    final isFav = favoriteCubit.isFavorite(
-                                      currentProduct.id,
-                                    );
-
-                                    return ItemCard(
-                                      onTap: () {
-                                        Navigator.of(context).pushNamed(
-                                          AppRoutes.productdetailsRoute,
-                                          arguments: currentProduct,
-                                        );
-                                      },
-                                      image: currentProduct.thumbnail,
-                                      productName: currentProduct.title,
-                                      rate: currentProduct.rating,
-                                      productAfterOffer: currentProduct.price,
-                                      productBeforeOffer:
-                                          currentProduct.discountPercentage,
-                                      isFavorite: isFav,
-                                      onFavoriteTap: () => _handleFavoriteTap(
-                                        context,
-                                        currentProduct.id,
-                                      ),
-                                    );
-                                  },
+                                  currentProduct.discountPercentage,
+                                  isFavorite: isFav,
+                                  onFavoriteTap: () => _handleFavoriteTap(
+                                    context,
+                                    currentProduct.id,
+                                  ),
+                                  productId: currentProduct.id,
                                 );
                               },
                             );
-                          } else {
-                            return const Center(
-                              child: Text("Something went wrong loading data"),
-                            );
-                          }
-                        },
-                      ),
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: Text("Something went wrong loading data"),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
@@ -137,5 +144,28 @@ class ProductsByCategoryScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleFavoriteTap(BuildContext context, int productId) async {
+    final cubit = context.read<FavoriteCubit>();
+    final wasFavorite = cubit.isFavorite(productId);
+    final result = await cubit.toggleFavorite(productId);
+
+    if (!context.mounted) return;
+
+    switch (result) {
+      case Success<String>():
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              wasFavorite ? "Removed from favourites" : "Added to favourites",
+            ),
+          ),
+        );
+      case Error<String>(messageError: final message):
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }

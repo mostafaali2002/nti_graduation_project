@@ -102,12 +102,14 @@ class CartCubit extends Cubit<CartState> {
     }
 
     final oldQuantity = currentQuantity;
+
     _quantities[productId] = currentQuantity - 1;
 
     final result = await deleteCartUseCase(productId: productId.toString());
 
     switch (result) {
       case Success<String>():
+        await getCart();
         emit(UpdateQuantitySuccess(_currentCart!, quantities: _quantities));
 
       case Error<String>():
@@ -117,10 +119,9 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> addCart(String productId, {String? productName}) async {
-    emit(AddCartLoading());
-
     _lastProductName = productName;
     _snackBarShown = false;
+    emit(AddCartLoading());
 
     final result = await addCartUseCase(
       productId: productId,
@@ -218,6 +219,11 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
+  bool isProductInCart(int productId) {
+    if (_currentCart == null) return false;
+    return _currentCart!.productList.any((p) => p.id == productId);
+  }
+
   void _removeProductFromCart(String productId) {
     if (_currentCart == null) return;
 
@@ -245,4 +251,5 @@ class CartCubit extends Cubit<CartState> {
     }
     return total;
   }
+
 }
