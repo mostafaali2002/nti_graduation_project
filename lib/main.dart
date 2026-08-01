@@ -12,6 +12,7 @@ import 'package:nti_graduation_project/features/auth/presentation/view/screen/lo
 import 'package:nti_graduation_project/features/auth/presentation/view/screen/register_screen.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/login/login_cubit.dart';
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart';
+import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_cubit.dart';
 import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
 import 'package:nti_graduation_project/features/hello/peresentation/hello_screen.dart';
 import 'package:nti_graduation_project/features/onboarding/presntaion/onbording_screen.dart';
@@ -51,7 +52,6 @@ class ShoppingApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<FavoriteCubit>(
-          
           create: (context) {
             final cubit = serviceLocator<FavoriteCubit>();
             if (token != null) {
@@ -62,6 +62,9 @@ class ShoppingApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => serviceLocator<AccountCubit>()),
         BlocProvider(create: (context) => serviceLocator<GetAccountCubit>()),
+        BlocProvider<CartCubit>(
+          create: (context) => serviceLocator<CartCubit>(),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeApp.lightTheme,

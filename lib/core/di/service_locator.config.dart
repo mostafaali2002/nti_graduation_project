@@ -45,6 +45,22 @@ import 'package:nti_graduation_project/features/auth/presentation/view_model/log
     as _i137;
 import 'package:nti_graduation_project/features/auth/presentation/view_model/register/register_cubit.dart'
     as _i788;
+import 'package:nti_graduation_project/features/cart/data/repo/cart_data_source_implement.dart'
+    as _i700;
+import 'package:nti_graduation_project/features/cart/data/repo/cart_repo_implement.dart'
+    as _i623;
+import 'package:nti_graduation_project/features/cart/domain/repo/cart_data_source_interface.dart'
+    as _i737;
+import 'package:nti_graduation_project/features/cart/domain/repo/cart_repo_interface.dart'
+    as _i198;
+import 'package:nti_graduation_project/features/cart/domain/use_case/add_cart_use_case.dart'
+    as _i605;
+import 'package:nti_graduation_project/features/cart/domain/use_case/delete_cart_use_case.dart'
+    as _i70;
+import 'package:nti_graduation_project/features/cart/domain/use_case/get_cart_use_case.dart'
+    as _i640;
+import 'package:nti_graduation_project/features/cart/presentation/view_model/cart_cubit.dart'
+    as _i383;
 import 'package:nti_graduation_project/features/favourite/data/repo/favourite_data_source_imp.dart'
     as _i171;
 import 'package:nti_graduation_project/features/favourite/data/repo/favourite_repo_imp.dart'
@@ -63,6 +79,7 @@ import 'package:nti_graduation_project/features/favourite/presentation/view_mode
     as _i1034;
 
 extension GetItInjectableX on _i174.GetIt {
+  // initializes the registration of main-scope dependencies inside of GetIt
   _i174.GetIt init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
@@ -72,12 +89,32 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i331.AuthDataSourceInterface>(
       () => _i231.AuthDataSourceImplem(),
     );
+    gh.factory<_i737.CartDataSourceInterface>(() => _i700.CartDataSourceImp());
+    gh.factory<_i658.FavoriteDataSourceInterface>(
+      () => _i171.FavoriteDataSourceImp(),
+    );
     gh.factory<_i335.AccountDataSourceInterface>(
       () => _i657.AccountDataSourceImp(),
     );
-    gh.factory<_i504.AccountCubit>(
-      () => _i504.AccountCubit(
-        accountInfoUseCase: gh<_i769.PostAccountInfoUseCase>(),
+    gh.factory<_i303.FavoriteRepoInterface>(
+      () => _i163.FavoriteRepoImp(
+        favoriteDataSource: gh<_i658.FavoriteDataSourceInterface>(),
+      ),
+    );
+    gh.factory<_i595.AddFavoriteUseCase>(
+      () => _i595.AddFavoriteUseCase(gh<_i303.FavoriteRepoInterface>()),
+    );
+    gh.factory<_i819.GetFavoriteUseCase>(
+      () => _i819.GetFavoriteUseCase(gh<_i303.FavoriteRepoInterface>()),
+    );
+    gh.factory<_i704.DeleteFavoriteUseCase>(
+      () => _i704.DeleteFavoriteUseCase(
+        favoriteRepo: gh<_i303.FavoriteRepoInterface>(),
+      ),
+    );
+    gh.factory<_i198.CartRepoInterface>(
+      () => _i623.CartRepoImp(
+        cartDataSource: gh<_i737.CartDataSourceInterface>(),
       ),
     );
     gh.factory<_i770.AccountRepoInterface>(
@@ -95,42 +132,44 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i887.GetAccountUseCase>(
       () => _i887.GetAccountUseCase(gh<_i770.AccountRepoInterface>()),
     );
+    gh.factory<_i605.AddCartUseCase>(
+      () => _i605.AddCartUseCase(cartRepo: gh<_i198.CartRepoInterface>()),
+    );
+    gh.factory<_i70.DeleteCartUseCase>(
+      () => _i70.DeleteCartUseCase(cartRepo: gh<_i198.CartRepoInterface>()),
+    );
+    gh.factory<_i640.GetCartUseCase>(
+      () => _i640.GetCartUseCase(cartRepo: gh<_i198.CartRepoInterface>()),
+    );
     gh.factory<_i9.LoginUseCase>(
       () => _i9.LoginUseCase(gh<_i48.AuthRepoInterface>()),
-    );
-    gh.factory<_i658.FavoriteDataSourceInterface>(
-      () => _i171.FavoriteDataSourceImp(),
     );
     gh.factory<_i103.RegisterUseCase>(
       () => _i103.RegisterUseCase(gh<_i48.AuthRepoInterface>()),
     );
-    gh.factory<_i303.FavoriteRepoInterface>(
-      () => _i163.FavoriteRepoImp(
-        favoriteDataSource: gh<_i658.FavoriteDataSourceInterface>(),
+    gh.factory<_i504.AccountCubit>(
+      () => _i504.AccountCubit(
+        accountInfoUseCase: gh<_i769.PostAccountInfoUseCase>(),
       ),
     );
     gh.factory<_i788.RegisterCubit>(
       () => _i788.RegisterCubit(gh<_i103.RegisterUseCase>()),
-    );
-    gh.factory<_i137.LoginCubit>(
-      () => _i137.LoginCubit(gh<_i9.LoginUseCase>()),
-    );
-    gh.factory<_i595.AddFavoriteUseCase>(
-      () => _i595.AddFavoriteUseCase(gh<_i303.FavoriteRepoInterface>()),
-    );
-    gh.factory<_i819.GetFavoriteUseCase>(
-      () => _i819.GetFavoriteUseCase(gh<_i303.FavoriteRepoInterface>()),
-    );
-    gh.factory<_i704.DeleteFavoriteUseCase>(
-      () => _i704.DeleteFavoriteUseCase(
-        favoriteRepo: gh<_i303.FavoriteRepoInterface>(),
-      ),
     );
     gh.factory<_i1034.FavoriteCubit>(
       () => _i1034.FavoriteCubit(
         gh<_i819.GetFavoriteUseCase>(),
         gh<_i595.AddFavoriteUseCase>(),
         gh<_i704.DeleteFavoriteUseCase>(),
+      ),
+    );
+    gh.factory<_i137.LoginCubit>(
+      () => _i137.LoginCubit(gh<_i9.LoginUseCase>()),
+    );
+    gh.factory<_i383.CartCubit>(
+      () => _i383.CartCubit(
+        getCartUseCase: gh<_i640.GetCartUseCase>(),
+        addCartUseCase: gh<_i605.AddCartUseCase>(),
+        deleteCartUseCase: gh<_i70.DeleteCartUseCase>(),
       ),
     );
     gh.factory<_i642.GetAccountCubit>(
