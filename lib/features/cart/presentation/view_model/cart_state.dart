@@ -20,10 +20,10 @@ final class GetCartFailure extends CartState {
 final class AddCartLoading extends CartState {}
 
 final class AddCartSuccess extends CartState {
-  final String message;
   final CartEntity cart;
   final Map<int, int> quantities;
-  AddCartSuccess(this.message, this.cart, {this.quantities = const {}});
+
+  AddCartSuccess(this.cart, {this.quantities = const {}});
 }
 
 final class AddCartFailure extends CartState {
@@ -34,10 +34,10 @@ final class AddCartFailure extends CartState {
 final class DeleteCartLoading extends CartState {}
 
 final class DeleteCartSuccess extends CartState {
-  final String message;
   final CartEntity cart;
   final Map<int, int> quantities;
-  DeleteCartSuccess(this.message, this.cart, {this.quantities = const {}});
+
+  DeleteCartSuccess(this.cart, {this.quantities = const {}});
 }
 
 final class DeleteCartFailure extends CartState {
@@ -62,9 +62,10 @@ final class OutOfStockError extends CartState {
   final String message;
   final CartEntity cart;
   final Map<int, int> quantities;
+
   OutOfStockError(
-    this.message, {
-    required this.cart,
-    this.quantities = const {},
-  });
+      this.message, {
+        required this.cart,
+        this.quantities = const {},
+      });
 }

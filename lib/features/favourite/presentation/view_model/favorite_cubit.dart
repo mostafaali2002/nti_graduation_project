@@ -34,8 +34,6 @@ class FavoriteCubit extends Cubit<FavoriteStates> {
     }
   }
 
-  //////////
-
   Future<ResultApi<String>> addFavorite(int productId) async {
     final result = await _addFavoriteUseCase.invoke(productId);
 
@@ -43,7 +41,6 @@ class FavoriteCubit extends Cubit<FavoriteStates> {
       case Success<String>():
         await _fetchAndEmit();
       case Error<String>():
-        // no list refresh needed on failure
         break;
     }
 

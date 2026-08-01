@@ -26,65 +26,11 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-
-        title: const Text("My Cart"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("My Cart"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(17),
         child: BlocConsumer<CartCubit, CartState>(
           listener: (context, state) {
-            if (state is DeleteCartSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-            if (state is AddCartSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-            if (state is DeleteCartFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-            if (state is AddCartFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-            if (state is UpdateQuantityFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-            if (state is OutOfStockError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.orange,
-                  duration: const Duration(seconds: 3),
-                ),
-              );
-            }
           },
           builder: (context, state) {
             if (state is GetCartLoading ||

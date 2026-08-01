@@ -1,29 +1,42 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:nti_graduation_project/core/common/widgets/custom_button.dart';
 import 'package:nti_graduation_project/core/common/widgets/custom_favorite.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_color_style.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
+import 'package:nti_graduation_project/features/favourite/presentation/view/widgets/add_to_cart_custom_button.dart';
 import 'package:nti_graduation_project/features/home/domain/entities/all_product_entity.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ProductDetailsScreen extends StatefulWidget {
+class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key});
   static const String routeName = "ProductDetailsScreen";
 
   @override
-  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+  Widget build(BuildContext context) {
+    final product =
+    ModalRoute.of(context)!.settings.arguments as ProductListEntity;
+
+    return _ProductDetailsContent(product: product);
+  }
 }
 
-class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  bool isFavourite = false;
 
+class _ProductDetailsContent extends StatefulWidget {
+  final ProductListEntity product;
+
+  const _ProductDetailsContent({required this.product});
+
+  @override
+  State<_ProductDetailsContent> createState() => _ProductDetailsContentState();
+}
+
+class _ProductDetailsContentState extends State<_ProductDetailsContent> {
   int currentImageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    final product =
-        ModalRoute.of(context)!.settings.arguments as ProductListEntity;
+    final product = widget.product;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -59,49 +72,49 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
                 itemBuilder:
                     (BuildContext context, int itemIndex, int pageViewIndex) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          color: AppColorStyle.whiteColor,
-                        ),
-                        child: Column(
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      color: AppColorStyle.whiteColor,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColorStyle.whiteColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    "${product.discountPercentage}% OFF",
-                                    style: AppTextStyle.kTextStyleRegular14
-                                        .copyWith(
-                                          color: AppColorStyle.lightButtonColor,
-                                        ),
-                                  ),
-                                ),
-                                FavoriteIconButton(
-                                  productId: product.id,
-                                  size: 28,
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Image.network(
-                                product.images[itemIndex],
-                                fit: BoxFit.cover,
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
                               ),
+                              decoration: BoxDecoration(
+                                color: AppColorStyle.whiteColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "${product.discountPercentage}% OFF",
+                                style: AppTextStyle.kTextStyleRegular14
+                                    .copyWith(
+                                  color: AppColorStyle.lightButtonColor,
+                                ),
+                              ),
+                            ),
+                            FavoriteIconButton(
+                              productId: product.id,
+                              size: 28,
                             ),
                           ],
                         ),
-                      );
-                    },
+                        Expanded(
+                          child: Image.network(
+                            product.images[itemIndex],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 12),
@@ -143,12 +156,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             Row(
               children: [
                 Text(
-                  "EGP ${((product.price) - (product.price * product.discountPercentage / 100)).toStringAsFixed(2)}",
+                  "EGP ${(product.price * (1 - (product.discountPercentage / 100))).ceilToDouble()}",
                   style: AppTextStyle.kTextStyleRegular16,
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  "EGP ${product.price}",
+                  "EGP ${product.price.ceilToDouble()}",
                   style: AppTextStyle.kTextStyleDiscount.copyWith(
                     fontSize: AppTextStyle.kTextStyleRegular16.fontSize,
                   ),
@@ -206,11 +219,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: CustomButton(
-          text: 'Add to cart',
-          backgroundColor: AppColorStyle.secondaryButtonColor,
-          textColor: AppColorStyle.bottomNavigationBarBackgroundColor,
-          borderColor: AppColorStyle.secondaryButtonColor,
+        child: AddToCartCustomButton(
+          productId: product.id,
+          productName: product.title,
+          width: double.infinity,
+          height: 50,
+          showLabel: true,
         ),
       ),
     );

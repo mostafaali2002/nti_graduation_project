@@ -19,4 +19,5 @@ abstract class ApiConstant {
 
   static String productsByCategoryEndPoint(String slug) =>
       '$baseUrl/home/products/category/$slug';
+
 }
