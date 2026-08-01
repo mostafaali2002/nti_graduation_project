@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/core/utils/helper/app_text_style.dart';
-import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_cubit.dart';
-import 'package:nti_graduation_project/features/favourite/presentation/view_model/favorite_states.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_data_source_imp.dart';
 import 'package:nti_graduation_project/features/home/data/repo/home_repo_imp.dart';
 import 'package:nti_graduation_project/features/home/domain/use_case/get_all_product_use_case.dart';
@@ -14,7 +11,6 @@ import 'package:nti_graduation_project/features/products_by_category/presentatio
 import '../../../../../core/common/widgets/item_card.dart';
 import '../../../../../core/routes/app_routes.dart';
 import '../../../../app_section/view/widgets/category_cart.dart';
-import '../../../../cart/presentation/view_model/cart_cubit.dart';
 import '../../../../product_details/presentation/screen/product_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -124,52 +120,38 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final currentProduct = product[index];
 
-                            return BlocBuilder<FavoriteCubit, FavoriteStates>(
-                              builder: (context, favState) {
-                                final favoriteCubit = context
-                                    .read<FavoriteCubit>();
-                                final isFav = favoriteCubit.isFavorite(
-                                  currentProduct.id,
-                                );
-
-                                return ItemCard(
-                                  onTap: () {
-                                    final cartCubit = context.read<CartCubit>();
-
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => BlocProvider.value(
-                                          value: cartCubit,
-                                          child: const ProductDetailsScreen(),
-                                        ),
-                                        settings: RouteSettings(
-                                          arguments: currentProduct,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  image: currentProduct.thumbnail,
-                                  productName: currentProduct.title,
-                                  rate: currentProduct.rating,
-                                  productAfterOffer:
-                                  (currentProduct.price * (1 - (currentProduct.discountPercentage / 100)))
-                                      .ceilToDouble(),
-                                  productBeforeOffer: currentProduct.price
-                                      .ceilToDouble(),
-                                  onFavoriteToggle: () {
-                                    context.read<FavoriteCubit>().getFavorite();
-                                  },
-                                  productId: currentProduct.id,
-                                  onFavoriteTap: () => _handleFavoriteTap(context, currentProduct.id),
+                            return ItemCard(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const ProductDetailsScreen(),
+                                    settings: RouteSettings(
+                                      arguments: currentProduct,
+                                    ),
+                                  ),
                                 );
                               },
+
+                              image: currentProduct.thumbnail,
+                              productName: currentProduct.title,
+                              rate: currentProduct.rating,
+                              productAfterOffer:
+                                  (currentProduct.price *
+                                          (1 -
+                                              (currentProduct
+                                                      .discountPercentage /
+                                                  100)))
+                                      .ceilToDouble(),
+                              productBeforeOffer: currentProduct.price
+                                  .ceilToDouble(),
+
+                              productId: currentProduct.id,
                             );
                           },
                         );
                       } else {
-                        return  Center(
-                          child: SizedBox(),
-                        );
+                        return Center(child: SizedBox());
                       }
                     },
                   ),
@@ -180,28 +162,5 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _handleFavoriteTap(BuildContext context, int productId) async {
-    final cubit = context.read<FavoriteCubit>();
-    final wasFavorite = cubit.isFavorite(productId);
-    final result = await cubit.toggleFavorite(productId);
-
-    if (!context.mounted) return;
-
-    switch (result) {
-      case Success<String>():
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              wasFavorite ? "Removed from favourites" : "Added to favourites",
-            ),
-          ),
-        );
-      case Error<String>(messageError: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-    }
   }
 }

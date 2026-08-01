@@ -12,9 +12,7 @@ class ItemCard extends StatelessWidget {
     required this.productAfterOffer,
     required this.productBeforeOffer,
     this.onTap,
-    this.isFavorite = false,
-    this.onFavoriteTap,
-    this.productId=0,  final VoidCallback? onFavoriteToggle,
+    this.productId = 0,
   });
 
   final String image;
@@ -23,8 +21,6 @@ class ItemCard extends StatelessWidget {
   final double productAfterOffer;
   final double productBeforeOffer;
   final VoidCallback? onTap;
-  final bool isFavorite;
-  final VoidCallback? onFavoriteTap;
   final int productId;
 
   @override
@@ -43,9 +39,7 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      FavoriteIconButton(productId: productId,),
-                    ],
+                    children: [FavoriteIconButton(productId: productId)],
                   ),
                   Expanded(
                     child: Image.network(

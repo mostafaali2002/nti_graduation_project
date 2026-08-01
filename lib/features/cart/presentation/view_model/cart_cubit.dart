@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:nti_graduation_project/features/cart/domain/entities/cart_entity.dart';
 import '../../../../core/network/result_api.dart';
 import '../../../home/domain/entities/all_product_entity.dart';
@@ -8,6 +9,7 @@ import '../../domain/use_case/delete_cart_use_case.dart';
 import '../../domain/use_case/get_cart_use_case.dart';
 import 'cart_state.dart';
 
+@injectable
 class CartCubit extends Cubit<CartState> {
   final GetCartUseCase getCartUseCase;
   final AddCartUseCase addCartUseCase;
@@ -55,7 +57,7 @@ class CartCubit extends Cubit<CartState> {
 
   int _getProductStock(int productId) {
     final product = _currentCart?.productList.firstWhere(
-          (p) => p.id == productId,
+      (p) => p.id == productId,
       orElse: () => ProductListEntity(),
     );
     return product?.stock ?? 0;
@@ -123,9 +125,7 @@ class CartCubit extends Cubit<CartState> {
     _snackBarShown = false;
     emit(AddCartLoading());
 
-    final result = await addCartUseCase(
-      productId: productId,
-    );
+    final result = await addCartUseCase(productId: productId);
 
     switch (result) {
       case Success<String>():
@@ -166,12 +166,7 @@ class CartCubit extends Cubit<CartState> {
         _isSuccess = true;
 
         _removeProductFromCart(productId);
-        emit(
-          DeleteCartSuccess(
-            _currentCart!,
-            quantities: _quantities,
-          ),
-        );
+        emit(DeleteCartSuccess(_currentCart!, quantities: _quantities));
 
       case Error<String>():
         _isSuccess = false;
@@ -180,7 +175,8 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> toggleCart(int productId, {String? productName}) async {
-    final isInCart = _currentCart?.productList.any((p) => p.id == productId) ?? false;
+    final isInCart =
+        _currentCart?.productList.any((p) => p.id == productId) ?? false;
 
     if (isInCart) {
       await deleteCart(productId.toString(), productName: productName);
@@ -245,11 +241,12 @@ class CartCubit extends Cubit<CartState> {
     for (var product in _currentCart!.productList) {
       final quantity = _quantities[product.id] ?? 1;
 
-      final priceAfterDiscount = (product.price * (1 - product.discountPercentage / 100)).floorToDouble();
+      final priceAfterDiscount =
+          (product.price * (1 - product.discountPercentage / 100))
+              .floorToDouble();
 
       total += priceAfterDiscount * quantity;
     }
     return total;
   }
-
 }
