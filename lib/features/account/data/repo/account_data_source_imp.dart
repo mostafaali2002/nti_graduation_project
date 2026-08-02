@@ -8,8 +8,8 @@ import 'package:nti_graduation_project/core/utils/helper/dio_helper.dart';
 import 'package:nti_graduation_project/features/account/data/model/account_dto.dart';
 import 'package:nti_graduation_project/features/account/data/model/get_account_dto.dart';
 import 'package:nti_graduation_project/features/account/domain/repo/account_data_source_interface.dart';
-import 'package:nti_graduation_project/features/home/domain/entities/account_entity.dart';
-import 'package:nti_graduation_project/features/home/domain/entities/get_account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/get_account_entity.dart';
 
 @Injectable(as: AccountDataSourceInterface)
 class AccountDataSourceImp implements AccountDataSourceInterface {

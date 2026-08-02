@@ -2,9 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:nti_graduation_project/core/network/result_api.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_state.dart';
-import 'package:nti_graduation_project/features/home/domain/entities/account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/account_entity.dart';
 import 'package:nti_graduation_project/features/account/domain/use_case/get_account_info_use_case.dart';
-import 'package:nti_graduation_project/features/home/domain/entities/get_account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/get_account_entity.dart';
 
 @injectable
 class GetAccountCubit extends Cubit<GetAccountState> {
