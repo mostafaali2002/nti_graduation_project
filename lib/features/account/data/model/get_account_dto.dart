@@ -1,4 +1,4 @@
-import 'package:nti_graduation_project/features/home/domain/entities/get_account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/get_account_entity.dart';
 
 class GetProfileDto {
   MessageDto? message;

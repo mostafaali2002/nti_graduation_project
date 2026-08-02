@@ -1,4 +1,4 @@
-import 'package:nti_graduation_project/features/home/domain/entities/account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/account_entity.dart';
 
 class ProfileDto {
   String? name;

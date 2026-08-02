@@ -15,7 +15,7 @@ import 'package:nti_graduation_project/features/app_section/view/widgets/image_p
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/account_cubit.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_cubit.dart';
 import 'package:nti_graduation_project/features/app_section/view_model/account_cubit/get_account_state.dart';
-import 'package:nti_graduation_project/features/home/domain/entities/account_entity.dart';
+import 'package:nti_graduation_project/features/account/domain/entities/account_entity.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../../core/routes/app_routes.dart';
