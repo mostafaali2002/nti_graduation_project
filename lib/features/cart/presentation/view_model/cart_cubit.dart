@@ -142,9 +142,8 @@ class CartCubit extends Cubit<CartState> {
           if (!_quantities.containsKey(productIdInt)) {
             _quantities[productIdInt] = 1;
           }
+          emit(AddCartSuccess(_currentCart!, quantities: _quantities));
         }
-
-        emit(AddCartSuccess(_currentCart!, quantities: _quantities));
 
       case Error<String>():
         _isSuccess = false;
